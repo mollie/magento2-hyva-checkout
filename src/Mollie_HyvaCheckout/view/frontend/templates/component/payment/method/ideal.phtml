@@ -1,0 +1,20 @@
+<div>
+    <ul class="ml-4 mollie-issuer-list">
+        <?php
+        /** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Ideal $block */
+        $magewire = $block->getMagewire();
+
+        foreach ($magewire->issuers as $issuer) {
+            echo '
+                <li class="my-1 mollie-issuer">
+                   <label>
+                       <input type="radio" name="selectedIssuer" wire:model="selectedIssuer" value="' . $issuer['id'] . '">
+                       <img class="mx-2 inline" src="' . $issuer['image']['svg'] . '" alt="' . $issuer['name'] . '">
+                       ' . $issuer['name'] . '
+                   </label>
+               </li>
+           ';
+        }
+        ?>
+    </ul>
+</div>

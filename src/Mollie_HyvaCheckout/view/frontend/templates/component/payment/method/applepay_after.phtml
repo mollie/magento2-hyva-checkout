@@ -1,0 +1,23 @@
+<?php
+/*
+ *  Copyright Magmodules.eu. All rights reserved.
+ *  See COPYING.txt for license details.
+ */
+?>
+<script>
+    function hideApplePayWhenNotAvailable() {
+        if (!window.ApplePaySession || !window.ApplePaySession.canMakePayments()) {
+            const applePayElement = document.getElementById('payment-method-option-mollie_methods_applepay');
+            if (applePayElement) {
+                applePayElement.style.display = 'none';
+            }
+        }
+    }
+
+    hideApplePayWhenNotAvailable();
+
+    window.addEventListener('magewire:update', component => {
+        hideApplePayWhenNotAvailable();
+    });
+</script>
+

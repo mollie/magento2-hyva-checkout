@@ -1,0 +1,22 @@
+{
+  "name": "mollie/magento2-hyva-checkout",
+  "description": "Hyvä Themes Checkout module for Mollie Payments",
+  "type": "magento2-module",
+  "license": [
+    "OSL-3.0",
+    "AFL-3.0"
+  ],
+  "require": {
+    "magento/framework": "*",
+    "hyva-themes/magento2-hyva-checkout": "*",
+    "mollie/magento2": "*"
+  },
+  "autoload": {
+    "files": [
+        "src/Mollie_HyvaCheckout/registration.php"
+    ],
+    "psr-4": {
+      "Mollie\\HyvaCheckout\\": "src/Mollie_HyvaCheckout"
+    }
+  }
+}

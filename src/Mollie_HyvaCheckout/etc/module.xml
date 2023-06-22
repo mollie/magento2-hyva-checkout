@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<!--
+  ~  Copyright Magmodules.eu. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="Mollie_HyvaCheckout">
+        <sequence>
+            <module name="Mollie_Payment"/>
+            <module name="Hyva_CompatModuleFallback"/>
+            <module name="Hyva_Checkout" />
+        </sequence>
+    </module>
+</config>

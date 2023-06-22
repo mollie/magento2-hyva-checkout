@@ -1,0 +1,64 @@
+<div>
+<?php
+/** @var \Magento\Framework\Escaper $escaper */
+
+/** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard $block */
+$magewire = $block->getMagewire();
+
+if ($magewire->isComponentsEnabled()) {
+    ?>
+    <div id="mollie-card-component" wire:ignore></div>
+
+    <script>
+        (() => {
+            let mollie;
+            async function renderMollieComponents() {
+                mollie = await Mollie('<?= $magewire->profileId ?>', {
+                    locale: '<?= $magewire->locale; ?>',
+                    testmode: <?= $magewire->isTestMode ? 'true' : 'false' ?>,
+                });
+
+                let cardComponent = mollie.createComponent('card', {
+                    styles : {
+                        base: {
+                            border: '1px solid #000',
+                        },
+                        invalid: {
+                            color: '#dc2626',
+                        }
+                    }
+                });
+
+                cardComponent.mount('#mollie-card-component');
+            }
+
+            window.addEventListener('checkout:payment:method-activate', () => {
+                hyvaCheckout.validation.register(
+                    'mollie_methods_creditcard',
+                    async () => {
+                        let { token, error } = await mollie.createToken();
+                        if (error) {
+                            hyvaCheckout.payment.dispatchExceptionMessage(error.message)
+                            return false;
+                        }
+
+                        const component = '<?= $escaper->escapeJs($block->getNameInLayout()) ?>';
+                        Magewire.find(component).setCardToken(token)
+
+                        return new Promise(resolve => setTimeout(() => resolve(true), 1000));
+                    },
+                    document.querySelector('#mollie-card-component'),
+                    'payment'
+                );
+            });
+
+            const script = document.createElement('script');
+            script.src = 'https://js.mollie.com/v1/mollie.js';
+            script.onload = () => renderMollieComponents();
+            document.head.append(script);
+        })();
+    </script>
+    <?php
+}
+?>
+</div>

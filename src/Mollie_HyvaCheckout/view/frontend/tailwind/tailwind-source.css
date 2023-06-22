@@ -1,0 +1,27 @@
+/*
+ *  Copyright Magmodules.eu. All rights reserved.
+ *  See COPYING.txt for license details.
+ */
+
+.mollie-component {
+    @apply border rounded;
+    @apply p-2;
+    @apply bg-white;
+}
+
+.mollie-component.is-invalid {
+    @apply bg-red-100;
+}
+
+.mollie-card-component {
+    @apply mb-2;
+}
+
+.mollie-card-component__error {
+    @apply text-red-600;
+    @apply text-sm;
+}
+
+.btn.btn-primary.apple-pay-button {
+    font-size: 0;
+}
