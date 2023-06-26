@@ -7,7 +7,9 @@ $magewire = $block->getMagewire();
 
 if ($magewire->isComponentsEnabled()) {
     ?>
-    <div id="mollie-card-component" wire:ignore></div>
+    <form>
+        <div id="mollie-card-component" wire:ignore></div>
+    </form>
 
     <script>
         (() => {
