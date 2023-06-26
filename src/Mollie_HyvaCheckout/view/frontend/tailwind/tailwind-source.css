@@ -23,5 +23,5 @@
 }
 
 .btn.btn-primary.apple-pay-button {
-    font-size: 0;
+    font-size: 0 !important;
 }
