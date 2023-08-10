@@ -41,4 +41,29 @@
             <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
         </arguments>
     </type>
+
+    <!-- Configure the icon library path prefix for the Hyva Checkout SVG icon renderer -->
+    <type name="Hyva\Theme\ViewModel\SvgIcons">
+        <arguments>
+            <argument name="pathPrefixMapping" xsi:type="array">
+                <item name="mollie_payments" xsi:type="string">Mollie_Payment::images/methods</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Mollie\HyvaCheckout\Plugin\PopulateIconData">
+        <arguments>
+            <!-- Change the iconLibraryPathPrefix to use a different icon library -->
+            <argument name="iconLibraryPathPrefix" xsi:type="string">mollie_payments</argument>
+        </arguments>
+    </type>
+
+    <!-- Icon renderer plugins -->
+    <type name="Hyva\Checkout\Model\MethodMetaData">
+        <plugin sortOrder="1" name="mollie_hyva_checkout_set_can_render_icon"
+                type="Mollie\HyvaCheckout\Plugin\RenderPaymentMethodIcons"/>
+    </type>
+    <type name="Hyva\Checkout\Model\MethodMetaDataInterface">
+        <plugin sortOrder="1" name="mollie_hyva_checkout_popuplate_icon_data"
+                type="Mollie\HyvaCheckout\Plugin\PopulateIconData"/>
+    </type>
 </config>
