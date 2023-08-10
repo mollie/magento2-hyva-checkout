@@ -22,6 +22,7 @@
                 <item name="mollie_methods_ideal" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_in3" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_kbc" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
+                <item name="mollie_methods_klarna" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_klarnapaylater" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_klarnapaynow" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_klarnasliceit" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
