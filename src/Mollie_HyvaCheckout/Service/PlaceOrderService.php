@@ -10,26 +10,30 @@ use Hyva\Checkout\Model\Magewire\Payment\AbstractPlaceOrderService;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Message\Manager;
 use Magento\Framework\UrlInterface;
+use Magento\Payment\Helper\Data;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Mollie\Api\Exceptions\ApiException;
+use Mollie\Payment\Model\Methods\CreditcardVault;
 use Mollie\Payment\Service\Mollie\Order\RedirectUrl;
 
 class PlaceOrderService extends AbstractPlaceOrderService
 {
     private OrderRepositoryInterface $orderRepository;
 
+    private Data $paymentHelper;
     private Manager $messageManager;
+
     private UrlInterface $url;
 
     private Session $checkoutSession;
-
     private RedirectUrl $redirectUrl;
 
     public function __construct(
         CartManagementInterface $cartManagement,
         OrderRepositoryInterface $orderRepository,
+        Data $paymentHelper,
         Manager $messageManager,
         UrlInterface $url,
         Session $checkoutSession,
@@ -37,6 +41,7 @@ class PlaceOrderService extends AbstractPlaceOrderService
     ) {
         parent::__construct($cartManagement);
         $this->orderRepository = $orderRepository;
+        $this->paymentHelper = $paymentHelper;
         $this->messageManager = $messageManager;
         $this->url = $url;
         $this->checkoutSession = $checkoutSession;
@@ -53,6 +58,10 @@ class PlaceOrderService extends AbstractPlaceOrderService
         $order = $this->orderRepository->get($orderId);
         /** @var \Mollie\Payment\Model\Mollie $method */
         $method = $quote->getPayment()->getMethodInstance();
+
+        if ($method instanceof CreditcardVault) {
+            $method = $this->paymentHelper->getMethodInstance('mollie_methods_creditcard');
+        }
 
         try {
             return $this->redirectUrl->execute($method, $order);

@@ -1,0 +1,33 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\CreditcardVault;
+
+/** @var CreditcardVault $magewire */
+/** @var Template $block */
+/** @var Escaper $escaper */
+?>
+<div>
+
+    <ul>
+        <?php foreach ($magewire->getSavedCards() as $card): ?>
+            <li>
+                <label>
+                    <input type="radio"
+                           name="mollie_vault_public_hash"
+                           wire:model="public_hash"
+                           value="<?= $escaper->escapeHtmlAttr($card['public_hash']); ?>"
+                    />
+                    <img class="inline-block"
+                         src="<?= $escaper->escapeUrl($block->getViewFileUrl('Mollie_Payment::images/creditcard-issuers/' . $card['type'] . '.svg')) ?>" />
+                    <?= __('ending %1', $card['maskedCC']); ?>
+                </label>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
