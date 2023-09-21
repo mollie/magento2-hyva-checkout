@@ -2,6 +2,7 @@
 
 namespace Mollie\HyvaCheckout\Observer;
 
+use Hyva\Checkout\Model\CheckoutInformation\Luma;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
@@ -79,7 +80,7 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
 
     private function isHyvaCheckoutActive(): bool
     {
-        return $this->hyvaCheckoutConfig->getCheckout() !== 'magento_luma';
+        return $this->hyvaCheckoutConfig->getCheckout() !== Luma::NAMESPACE;
     }
 
     private function quoteHasActivePaymentMethod(Quote $quote): bool
