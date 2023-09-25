@@ -3,7 +3,7 @@
 namespace Mollie\HyvaCheckout\Plugin;
 
 use Hyva\Checkout\Model\MethodMetaDataInterface;
-use \Mollie\Payment\Helper\General as MollieHelper;
+use Mollie\Payment\Helper\General as MollieHelper;
 
 class PopulateIconData
 {
