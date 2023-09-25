@@ -64,6 +64,7 @@ class Creditcard extends Form
     {
         $quote = $this->sessionCheckout->getQuote();
         $quote->getPayment()->setAdditionalInformation('card_token', $value);
+        $quote->getPayment()->setAdditionalInformation('is_active_payment_token_enabler', true);
 
         $this->quoteRepository->save($quote);
 

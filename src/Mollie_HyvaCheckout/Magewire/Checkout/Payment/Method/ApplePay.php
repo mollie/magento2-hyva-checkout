@@ -13,6 +13,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magewirephp\Magewire\Component\Form;
 use Mollie\Payment\Config;
 use Mollie\Payment\Model\Adminhtml\Source\ApplePayIntegrationType;
+use Mollie\Payment\Service\Mollie\ApplePay\SupportedNetworks;
 use Rakit\Validation\Validator;
 
 class ApplePay extends Form
@@ -30,6 +31,8 @@ class ApplePay extends Form
     private StoreManagerInterface $storeManager;
 
     private CartRepositoryInterface $cartRepository;
+
+    private SupportedNetworks $supportedNetworks;
 
     private Config $config;
 
@@ -49,7 +52,8 @@ class ApplePay extends Form
         Session $checkoutSession,
         StoreManagerInterface $storeManager,
         CartRepositoryInterface $cartRepository,
-        Config $config
+        Config $config,
+        SupportedNetworks $supportedNetworks
     ) {
         parent::__construct($validator);
 
@@ -58,6 +62,7 @@ class ApplePay extends Form
         $this->storeManager = $storeManager;
         $this->cartRepository = $cartRepository;
         $this->config = $config;
+        $this->supportedNetworks = $supportedNetworks;
     }
 
     public function mount(): void
@@ -91,5 +96,10 @@ class ApplePay extends Form
         $this->cartRepository->save($quote);
 
         return $token;
+    }
+
+    public function getSupportedNetworks(): array
+    {
+        return $this->supportedNetworks->execute();
     }
 }

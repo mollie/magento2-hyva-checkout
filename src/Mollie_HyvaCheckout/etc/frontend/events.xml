@@ -9,4 +9,7 @@
     <event name="hyva_config_generate_before">
         <observer name="mollie_hyvacheckout_register_module" instance="Mollie\HyvaCheckout\Observer\HyvaConfigGenerateBefore\RegisterModuleForHyvaConfig"/>
     </event>
+    <event name="sales_quote_collect_totals_before">
+        <observer name="mollie_hyvacheckout_preselect_payment_method" instance="Mollie\HyvaCheckout\Observer\SalesQuoteCollectTotalsBefore\SetDefaultSelectedPaymentMethod"/>
+    </event>
 </config>

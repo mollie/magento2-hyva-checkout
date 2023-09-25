@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Quote\Api\PaymentMethodManagementInterface">
+        <plugin name="mollie_hide_creditcard_vault_when_not_applicable" type="Mollie\HyvaCheckout\Plugin\Quote\Api\HideVaultWhenNotApplicable" />
+    </type>
+
+    <type name="Mollie\HyvaCheckout\Plugin\Quote\Api\HideVaultWhenNotApplicable">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+</config>

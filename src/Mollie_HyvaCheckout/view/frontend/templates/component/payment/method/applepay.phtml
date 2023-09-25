@@ -19,7 +19,7 @@
                         let request = {
                             countryCode: "<?php echo $escaper->escapeJs($magewire->countryId); ?>",
                             currencyCode: "<?php echo $escaper->escapeJs($magewire->currencyCode); ?>",
-                            supportedNetworks: ['amex', 'maestro', 'masterCard', 'visa', 'vPay'],
+                            supportedNetworks: <?php echo json_encode($magewire->getSupportedNetworks()); ?>,
                             merchantCapabilities: ['supports3DS'],
                             total: {
                                 label: "<?php echo $escaper->escapeJs($magewire->storeName); ?>",
