@@ -1,17 +1,23 @@
-<?php declare(strict_types=1);
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
-namespace Mollie\HyvaCheckout\Observer;
+declare(strict_types=1);
+
+namespace Mollie\HyvaCheckout\Observer\SalesQuoteCollectTotalsBefore;
 
 use Hyva\Checkout\Model\CheckoutInformation\Luma;
+use Hyva\Checkout\Model\ConfigData\HyvaThemes\SystemConfigGeneral as HyvaCheckoutConfig;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Quote\Model\Quote;
 use Magento\Quote\Api\Data\PaymentInterfaceFactory;
+use Magento\Quote\Model\Quote;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Mollie\Payment\Config;
-use Hyva\Checkout\Model\ConfigData\HyvaThemes\SystemConfigGeneral as HyvaCheckoutConfig;
 
 class SetDefaultSelectedPaymentMethod implements ObserverInterface
 {
