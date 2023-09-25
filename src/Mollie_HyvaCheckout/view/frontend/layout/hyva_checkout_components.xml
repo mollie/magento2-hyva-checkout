@@ -24,6 +24,16 @@
                 </arguments>
             </block>
 
+            <block name="checkout.payment.method.mollie_methods_creditcard_vault"
+                   as="mollie_methods_creditcard_vault"
+                   template="Mollie_HyvaCheckout::component/payment/method/creditcard_vault.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\CreditcardVault
+                    </argument>
+                </arguments>
+            </block>
+
             <block name="checkout.payment.method.mollie_methods_applepay"
                    as="mollie_methods_applepay"
                    template="Mollie_HyvaCheckout::component/payment/method/applepay.phtml">

@@ -15,6 +15,7 @@
                 <item name="mollie_methods_belfius" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_billie" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_creditcard" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
+                <item name="mollie_methods_creditcard_vault" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_directdebit" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_eps" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_giftcard" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
@@ -65,5 +66,9 @@
     <type name="Hyva\Checkout\Model\MethodMetaDataInterface">
         <plugin sortOrder="1" name="mollie_hyva_checkout_popuplate_icon_data"
                 type="Mollie\HyvaCheckout\Plugin\PopulateIconData"/>
+    </type>
+
+    <type name="Mollie\Payment\Model\Methods\CreditcardVault">
+        <plugin name="mollie_hyva_change_vault_title" type="Mollie\HyvaCheckout\Plugin\Mollie\Model\Methods\ChangeVaultTitle" />
     </type>
 </config>
