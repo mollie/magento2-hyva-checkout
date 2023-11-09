@@ -9,7 +9,7 @@
         if (!window.ApplePaySession || !window.ApplePaySession.canMakePayments()) {
             const applePayElement = document.getElementById('payment-method-option-mollie_methods_applepay');
             if (applePayElement) {
-                applePayElement.style.display = 'none';
+                applePayElement.parentNode.removeChild(applePayElement);
             }
         }
     }
