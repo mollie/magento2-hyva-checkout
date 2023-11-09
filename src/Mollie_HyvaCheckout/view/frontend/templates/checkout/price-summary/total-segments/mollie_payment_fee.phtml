@@ -1,0 +1,31 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes 2022-present. All rights reserved.
+ * This product is licensed per Magento install
+ * See https://hyva.io/license
+ */
+
+declare(strict_types=1);
+
+/** @var Template $block */
+/** @var FormatterViewModel $formatterViewModel */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Hyva\Checkout\ViewModel\Checkout\Formatter as FormatterViewModel;
+use Hyva\Theme\Model\ViewModelRegistry;
+
+$formatterViewModel = $viewModels->require(FormatterViewModel::class);
+$segment = $block->getSegment();
+?>
+<div class="flex gap-4 justify-between md:gap-0">
+    <span class="label">
+        <?= $escaper->escapeHtml(__('Payment Fee')) ?>
+    </span>
+    <span class="value">
+        <?= /* @noEscape */ $formatterViewModel->currency($segment['value'] ?? 0) ?>
+    </span>
+</div>

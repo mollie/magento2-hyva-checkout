@@ -51,5 +51,10 @@
                    template="Mollie_HyvaCheckout::component/payment/method/applepay_after.phtml"/>
         </referenceContainer>
 
+        <referenceContainer name="price-summary.total-segments">
+            <block name="price-summary.total-segment.mollie_payment_fee"
+                   as="mollie_payment_fee"
+                   template="Mollie_HyvaCheckout::checkout/price-summary/total-segments/mollie_payment_fee.phtml"/>
+        </referenceContainer>
     </body>
 </page>
