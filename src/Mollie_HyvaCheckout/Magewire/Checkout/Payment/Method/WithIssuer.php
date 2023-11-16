@@ -16,7 +16,7 @@ use Rakit\Validation\Validator;
 /**
  * @method static getMagewire()
  */
-class Ideal extends Form
+class WithIssuer extends Form
 {
     protected $rules = [
         'mollie_issuer' => 'required',
@@ -34,18 +34,22 @@ class Ideal extends Form
 
     private GetIssuers $getIssuers;
 
+    private string $method;
+
     public function __construct(
         Validator $validator,
         SessionCheckout $sessionCheckout,
         CartRepositoryInterface $quoteRepository,
         MollieApiClient $mollieApiClient,
-        GetIssuers $getIssuers
+        GetIssuers $getIssuers,
+        string $method
     ) {
         parent::__construct($validator);
         $this->sessionCheckout = $sessionCheckout;
         $this->mollieApiClient = $mollieApiClient;
         $this->getIssuers = $getIssuers;
         $this->quoteRepository = $quoteRepository;
+        $this->method = $method;
     }
 
     public function mount(): void
@@ -53,7 +57,7 @@ class Ideal extends Form
         $quote = $this->sessionCheckout->getQuote();
 
         $mollieApiClient = $this->mollieApiClient->loadByStore();
-        $this->issuers = $this->getIssuers->execute($mollieApiClient, 'ideal', 'list');
+        $this->issuers = $this->getIssuers->execute($mollieApiClient, $this->method, 'list');
 
         if ($selectedIssuer = $quote->getPayment()->getAdditionalInformation('selected_issuer')) {
             $this->selectedIssuer = $selectedIssuer;

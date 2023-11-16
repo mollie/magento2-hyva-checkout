@@ -15,4 +15,28 @@
             <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
         </arguments>
     </type>
+
+    <virtualType name="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Ideal"
+                 type="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithIssuer"
+    >
+        <arguments>
+            <argument name="method" xsi:type="string">ideal</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Kbc"
+                 type="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithIssuer"
+    >
+        <arguments>
+            <argument name="method" xsi:type="string">kbc</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Giftcard"
+                 type="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithIssuer"
+    >
+        <arguments>
+            <argument name="method" xsi:type="string">giftcard</argument>
+        </arguments>
+    </virtualType>
 </config>
