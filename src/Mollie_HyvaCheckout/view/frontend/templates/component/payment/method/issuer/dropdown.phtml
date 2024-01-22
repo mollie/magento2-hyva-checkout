@@ -1,0 +1,18 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithIssuer $block */
+$magewire = $block->getMagewire();
+?>
+<div>
+    <select wire:model="selectedIssuer">
+        <option value=""><?= $escaper->escapeHtml(__('Please select')); ?></option>
+        <?php foreach ($magewire->issuers as $issuer): ?>
+            <option value="<?= $issuer['id'] ?>"><?= $issuer['name']; ?></option>
+        <?php endforeach; ?>
+    </select>
+</div>

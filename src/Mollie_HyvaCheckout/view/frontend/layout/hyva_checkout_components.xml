@@ -6,8 +6,10 @@
         <referenceBlock name="checkout.payment.methods">
             <block name="checkout.payment.method.mollie_methods_ideal"
                    as="mollie_methods_ideal"
-                   template="Mollie_HyvaCheckout::component/payment/method/ideal.phtml">
+                   class="Mollie\HyvaCheckout\Block\Checkout\Payment\Issuer"
+            >
                 <arguments>
+                    <argument name="mollie_method" xsi:type="string">mollie_methods_ideal</argument>
                     <argument name="magewire" xsi:type="object">
                         Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Ideal
                     </argument>
@@ -40,6 +42,30 @@
                 <arguments>
                     <argument name="magewire" xsi:type="object">
                         Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay
+                    </argument>
+                </arguments>
+            </block>
+
+            <block name="checkout.payment.method.mollie_methods_kbc"
+                   as="mollie_methods_kbc"
+                   class="Mollie\HyvaCheckout\Block\Checkout\Payment\Issuer"
+            >
+                <arguments>
+                    <argument name="mollie_method" xsi:type="string">mollie_methods_kbc</argument>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Kbc
+                    </argument>
+                </arguments>
+            </block>
+
+            <block name="checkout.payment.method.mollie_methods_giftcard"
+                   as="mollie_methods_giftcard"
+                   class="Mollie\HyvaCheckout\Block\Checkout\Payment\Issuer"
+            >
+                <arguments>
+                    <argument name="mollie_method" xsi:type="string">mollie_methods_giftcard</argument>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Giftcard
                     </argument>
                 </arguments>
             </block>

@@ -1,7 +1,13 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
 <div>
     <ul class="ml-4 mollie-issuer-list">
         <?php
-        /** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Ideal $block */
+        /** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithIssuer $block */
         $magewire = $block->getMagewire();
 
         foreach ($magewire->issuers as $issuer) {
