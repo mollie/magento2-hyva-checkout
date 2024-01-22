@@ -22,15 +22,19 @@ class PopulateIconData
             return;
         }
 
-        $methodCode = $subject->getMethod()->getCode();
-        if (!$this->isMollieMethod($methodCode)) {
+        $method = $subject->getMethod();
+        if (!$this->isMollieMethod($method->getCode())) {
             return;
         }
 
-        $paymentIconPath = $this->getPaymentIconPath($methodCode);
+        $paymentIconPath = $this->getPaymentIconPath($method->getCode());
 
         $subject->setData(MethodMetaDataInterface::ICON, [
-            'svg' => $paymentIconPath
+            'svg' => $paymentIconPath,
+            'attributes' => [
+                'title' => $method->getTitle()
+            ]
+            
         ]);
     }
 
