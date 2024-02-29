@@ -6,6 +6,8 @@
 
 namespace Mollie\HyvaCheckout\Service;
 
+use Hyva\Checkout\Model\Magewire\Component\EvaluationResultFactory;
+use Hyva\Checkout\Model\Magewire\Component\EvaluationResultInterface;
 use Hyva\Checkout\Model\Magewire\Payment\AbstractPlaceOrderService;
 use Magento\Checkout\Model\Session;
 use Magento\Framework\Message\Manager;
@@ -48,7 +50,17 @@ class PlaceOrderService extends AbstractPlaceOrderService
         $this->redirectUrl = $redirectUrl;
     }
 
+    public function evaluateCompletion(EvaluationResultFactory $resultFactory, ?int $orderId = null): EvaluationResultInterface
+    {
+        return $resultFactory->createSuccess();
+    }
+    
     public function canPlaceOrder(): bool
+    {
+        return true;
+    }
+
+    public function canRedirect(): bool
     {
         return true;
     }
