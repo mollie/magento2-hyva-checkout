@@ -16,6 +16,12 @@
         </arguments>
     </type>
 
+    <type name="Mollie\HyvaCheckout\Service\Vault\GetSavedCards">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
     <virtualType name="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Ideal"
                  type="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithIssuer"
     >

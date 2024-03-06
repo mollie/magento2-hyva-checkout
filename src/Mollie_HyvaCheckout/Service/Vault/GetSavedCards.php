@@ -8,8 +8,10 @@ declare(strict_types=1);
 
 namespace Mollie\HyvaCheckout\Service\Vault;
 
+use Magento\Customer\Model\Session;
 use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Vault\Api\Data\PaymentTokenInterface;
 use Magento\Vault\Api\PaymentTokenRepositoryInterface;
 
 class GetSavedCards
@@ -17,15 +19,18 @@ class GetSavedCards
     private SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory;
     private PaymentTokenRepositoryInterface $paymentTokenRepository;
     private SerializerInterface $serializer;
+    private Session $customerSession;
 
     public function __construct(
         SearchCriteriaBuilderFactory $searchCriteriaBuilderFactory,
         PaymentTokenRepositoryInterface $paymentTokenRepository,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        Session $customerSession
     ) {
         $this->searchCriteriaBuilderFactory = $searchCriteriaBuilderFactory;
         $this->paymentTokenRepository = $paymentTokenRepository;
         $this->serializer = $serializer;
+        $this->customerSession = $customerSession;
     }
 
     /**
@@ -40,8 +45,15 @@ class GetSavedCards
      */
     public function execute(): array
     {
+        if (!$this->customerSession->isLoggedIn()) {
+            return [];
+        }
+
         $search = $this->searchCriteriaBuilderFactory->create();
-        $search->addFilter('payment_method_code', 'mollie_methods_creditcard');
+        $search->addFilter(PaymentTokenInterface::IS_VISIBLE, 1);
+        $search->addFilter(PaymentTokenInterface::IS_ACTIVE, 1);
+        $search->addFilter(PaymentTokenInterface::CUSTOMER_ID, $this->customerSession->getCustomerId());
+        $search->addFilter(PaymentTokenInterface::PAYMENT_METHOD_CODE, 'mollie_methods_creditcard');
 
         $output = [];
         $items = $this->paymentTokenRepository->getList($search->create())->getItems();
