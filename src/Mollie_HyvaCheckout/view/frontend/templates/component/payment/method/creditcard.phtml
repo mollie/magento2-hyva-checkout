@@ -3,7 +3,7 @@
  * Copyright Magmodules.eu. All rights reserved.
  * See COPYING.txt for license details.
  */
- ?>
+?>
 <div>
 <?php
 /** @var \Magento\Framework\Escaper $escaper */
@@ -40,23 +40,27 @@ if ($magewire->isComponentsEnabled()) {
                 cardComponent.mount('#mollie-card-component');
             }
 
-            window.addEventListener('checkout:payment:method-activate', () => {
-                hyvaCheckout.validation.register(
+            window.addEventListener('checkout:payment:method-activate', event => {
+                if (event.detail.method !== 'mollie_methods_creditcard') {
+                    return;
+                }
+
+                hyvaCheckout.payment.activate(
                     'mollie_methods_creditcard',
-                    async () => {
-                        let { token, error } = await mollie.createToken();
-                        if (error) {
-                            hyvaCheckout.payment.dispatchExceptionMessage(error.message)
-                            return false;
+                    {
+                        async validate() {
+                            let { token, error } = await mollie.createToken();
+                            if (error) {
+                                hyvaCheckout.payment.dispatchExceptionMessage(error.message)
+                                return false;
+                            }
+
+                            const component = '<?= $escaper->escapeJs($block->getNameInLayout()) ?>';
+
+                            return Magewire.find(component).setCardToken(token)
                         }
-
-                        const component = '<?= $escaper->escapeJs($block->getNameInLayout()) ?>';
-                        Magewire.find(component).setCardToken(token)
-
-                        return new Promise(resolve => setTimeout(() => resolve(true), 1000));
                     },
-                    document.querySelector('#mollie-card-component'),
-                    'payment'
+                    document.querySelector('#mollie-card-component')
                 );
             });
 
