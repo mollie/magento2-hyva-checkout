@@ -1,21 +1,14 @@
 <?xml version="1.0"?>
+<!--
+  ~ Copyright Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
 >
     <body>
         <referenceBlock name="checkout.payment.methods">
-            <block name="checkout.payment.method.mollie_methods_ideal"
-                   as="mollie_methods_ideal"
-                   class="Mollie\HyvaCheckout\Block\Checkout\Payment\Issuer"
-            >
-                <arguments>
-                    <argument name="mollie_method" xsi:type="string">mollie_methods_ideal</argument>
-                    <argument name="magewire" xsi:type="object">
-                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Ideal
-                    </argument>
-                </arguments>
-            </block>
-
             <block name="checkout.payment.method.mollie_methods_creditcard"
                    as="mollie_methods_creditcard"
                    template="Mollie_HyvaCheckout::component/payment/method/creditcard.phtml">
