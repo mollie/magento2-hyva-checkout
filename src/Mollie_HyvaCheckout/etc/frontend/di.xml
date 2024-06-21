@@ -34,6 +34,7 @@
                 <item name="mollie_methods_przelewy24" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_sofort" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_twint" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
+                <item name="mollie_methods_blik" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
             </argument>
         </arguments>
     </type>
