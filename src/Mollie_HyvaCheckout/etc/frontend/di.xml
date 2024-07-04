@@ -21,7 +21,6 @@
                 <item name="mollie_methods_directdebit" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_eps" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_giftcard" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
-                <item name="mollie_methods_giropay" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_ideal" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_in3" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_kbc" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
@@ -35,6 +34,7 @@
                 <item name="mollie_methods_przelewy24" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_riverty" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_sofort" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
+                <item name="mollie_methods_trustly" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_twint" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_voucher" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
             </argument>
