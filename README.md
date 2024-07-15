@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://info.mollie.com/hubfs/github/magento-2/logo.png" width="128" height="128"/>
+  <img src="https://private-user-images.githubusercontent.com/24823946/348648416-100c62f2-9364-4d08-a1e4-24069ce0e9a3.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjEwMzM5ODcsIm5iZiI6MTcyMTAzMzY4NywicGF0aCI6Ii8yNDgyMzk0Ni8zNDg2NDg0MTYtMTAwYzYyZjItOTM2NC00ZDA4LWExZTQtMjQwNjljZTBlOWEzLmpwZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA3MTUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNzE1VDA4NTQ0N1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTdjM2RjZTFkZTNkNmMwNjRkMmE1MjhiYjdhODI3MGM4ZjkzMmE2YjQ5MjY1NmIzZDI2NWM0ZGJhZDI4ZWY4NzAmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.bTtt0OR_oEINjO8QYldyWYDNn53iLIdR9Lpjb-gXZEo" />
 </p>
 <h1 align="center">Hyvä Checkout support for Mollie</h1>
 
