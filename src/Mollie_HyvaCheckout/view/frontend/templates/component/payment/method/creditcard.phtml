@@ -57,7 +57,8 @@ if ($magewire->isComponentsEnabled()) {
 
                             const component = '<?= $escaper->escapeJs($block->getNameInLayout()) ?>';
 
-                            return Magewire.find(component).setCardToken(token)
+                            await Magewire.find(component).setCardToken(token)
+                            return true
                         }
                     },
                     document.querySelector('#mollie-card-component')
