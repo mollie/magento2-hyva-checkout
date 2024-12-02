@@ -18,5 +18,8 @@
     "psr-4": {
       "Mollie\\HyvaCheckout\\": "src/Mollie_HyvaCheckout"
     }
+  },
+  "suggest": {
+    "mollie/magento2-hyva-compatibility": "Adds compatibility for Mollie Payments to Hyvä Themes"
   }
 }
