@@ -1,5 +1,6 @@
 <p align="center">
-  <img src="https://private-user-images.githubusercontent.com/24823946/348648416-100c62f2-9364-4d08-a1e4-24069ce0e9a3.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjEwMzM5ODcsIm5iZiI6MTcyMTAzMzY4NywicGF0aCI6Ii8yNDgyMzk0Ni8zNDg2NDg0MTYtMTAwYzYyZjItOTM2NC00ZDA4LWExZTQtMjQwNjljZTBlOWEzLmpwZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA3MTUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNzE1VDA4NTQ0N1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTdjM2RjZTFkZTNkNmMwNjRkMmE1MjhiYjdhODI3MGM4ZjkzMmE2YjQ5MjY1NmIzZDI2NWM0ZGJhZDI4ZWY4NzAmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.bTtt0OR_oEINjO8QYldyWYDNn53iLIdR9Lpjb-gXZEo" />
+  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/24823946/391588454-5190a43b-c00a-4004-9792-b3c55a89283b.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241202T144509Z&X-Amz-Expires=300&X-Amz-Signature=577ada876b15aadfbf3254b22326166b7ed693a30f3ae45ab27d9a236211b78c&X-Amz-SignedHeaders=host" />
+  
 </p>
 <h1 align="center">Hyvä Checkout support for Mollie</h1>
 
