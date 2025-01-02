@@ -1,8 +1,9 @@
 <p align="center">
-  <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/24823946/391588454-5190a43b-c00a-4004-9792-b3c55a89283b.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241202%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241202T144509Z&X-Amz-Expires=300&X-Amz-Signature=577ada876b15aadfbf3254b22326166b7ed693a30f3ae45ab27d9a236211b78c&X-Amz-SignedHeaders=host" />
-  
+  <img src="./images/hyva-mollie-header.jpg" />
 </p>
-<h1 align="center">Hyvä Checkout support for Mollie</h1>
+
+# Hyvä Checkout support for Mollie
+Hyvä Checkout is the ultimate checkout tool for Magento. It delivers better performance, better developer experience, higher conversion rates and AOV.
 
 ## About Mollie Payments
 With Mollie, you can accept payments and donations online and expand your customer base internationally with support for all major payment methods through a single integration. No need to spend weeks on paperwork or security compliance procedures. No more lost conversions because you don’t support a shopper’s favourite payment method or because they don’t feel safe. We made our products and API expansive, intuitive, and safe for merchants, customers and developers alike.
@@ -45,14 +46,14 @@ php bin/magento hyva:config:generate
 5. Generate the CSS files:
 
 ```bash
-npm --prefix vendor/hyva-themes/magento2-default-theme/web/tailwind/ run ci
+npm --prefix vendor/hyva-themes/magento2-default-theme/web/tailwind/ ci
 npm --prefix vendor/hyva-themes/magento2-default-theme/web/tailwind/ run build-prod
 ```
 
 Or from your theme:
 
 ```bash
-npm --prefix app/design/frontend/<Vendor>/<Theme>/web/tailwind run ci
+npm --prefix app/design/frontend/<Vendor>/<Theme>/web/tailwind ci
 npm --prefix app/design/frontend/<Vendor>/<Theme>/web/tailwind run build-prod
 ```
 
