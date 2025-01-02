@@ -1,0 +1,14 @@
+{
+  "type": {
+    "Email address": "janjanssen@mollie.com",
+    "First Name": "Jan",
+    "Last Name": "Janssen",
+    "Street Address": "Doorzonwoning 34A",
+    "City": "VinexStad",
+    "Zip/Postal Code": "1234AB",
+    "Phone Number": "0201234567"
+  },
+  "select": {
+    "Country": "NL"
+  }
+}
