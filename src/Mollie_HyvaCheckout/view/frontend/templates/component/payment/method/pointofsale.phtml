@@ -1,0 +1,44 @@
+<?php
+declare(strict_types=1);
+
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithTerminal $magewire */
+?>
+<div>
+    <ul id="mollie-terminal-list">
+        <?php foreach ($magewire->getTerminals() as $terminal): ?>
+            <li>
+                <label>
+                    <input type="radio"
+                           name="mollie_selected_terminal"
+                           class="mr-2"
+                           value="<?= $escaper->escapeHtmlAttr($terminal['id']); ?>"
+                           wire:model="selectedTerminal"
+                           required
+                    />
+                    <?= $escaper->escapehtml($terminal['brand']); ?>
+                    <?= $escaper->escapehtml($terminal['model']); ?>
+                    <?= $escaper->escapehtml($terminal['description']); ?>
+                </label>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <script>
+        window.addEventListener('checkout:payment:method-activate', event => {
+            if (event.detail.method !== 'mollie_methods_pointofsale') {
+                return;
+            }
+
+            hyvaCheckout.payment.activate(
+                'mollie_methods_pointofsale',
+                {
+                    validate() {
+                        return document.querySelectorAll('[name="mollie_selected_terminal"]:checked').length > 0;
+                    }
+                },
+                document.getElementById('mollie-terminal-list')
+            );
+        });
+    </script>
+</div>
