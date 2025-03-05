@@ -3,6 +3,7 @@
 namespace Mollie\HyvaCheckout\Plugin;
 
 use Hyva\Checkout\Model\MethodMetaDataInterface;
+use Magento\Quote\Model\Cart\ShippingMethod;
 use Mollie\Payment\Helper\General as MollieHelper;
 
 class PopulateIconData
@@ -23,6 +24,11 @@ class PopulateIconData
         }
 
         $method = $subject->getMethod();
+
+        if ($method instanceof ShippingMethod) {
+            return;
+        }
+
         if (!$this->isMollieMethod($method->getCode())) {
             return;
         }
@@ -34,7 +40,7 @@ class PopulateIconData
             'attributes' => [
                 'title' => $method->getTitle()
             ]
-            
+
         ]);
     }
 
