@@ -22,6 +22,7 @@
             <argument name="placeOrderServiceList" xsi:type="array">
                 <item name="mollie_methods_alma" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_applepay" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
+                <item name="mollie_methods_bancomatpay" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_bancontact" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_banktransfer" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_belfius" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
@@ -40,6 +41,8 @@
                 <item name="mollie_methods_klarnapaylater" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_klarnapaynow" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_klarnasliceit" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
+                <item name="mollie_methods_mbway" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
+                <item name="mollie_methods_multibanco" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_mybank" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_paypal" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_paysafecard" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
@@ -47,6 +50,7 @@
                 <item name="mollie_methods_pointofsale" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_przelewy24" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_riverty" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
+                <item name="mollie_methods_satispay" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_sofort" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_trustly" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
                 <item name="mollie_methods_twint" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
