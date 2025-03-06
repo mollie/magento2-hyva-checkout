@@ -1,7 +1,9 @@
 <p align="center">
-  <img src="https://private-user-images.githubusercontent.com/24823946/348648416-100c62f2-9364-4d08-a1e4-24069ce0e9a3.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MjEwMzM5ODcsIm5iZiI6MTcyMTAzMzY4NywicGF0aCI6Ii8yNDgyMzk0Ni8zNDg2NDg0MTYtMTAwYzYyZjItOTM2NC00ZDA4LWExZTQtMjQwNjljZTBlOWEzLmpwZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA3MTUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNzE1VDA4NTQ0N1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTdjM2RjZTFkZTNkNmMwNjRkMmE1MjhiYjdhODI3MGM4ZjkzMmE2YjQ5MjY1NmIzZDI2NWM0ZGJhZDI4ZWY4NzAmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.bTtt0OR_oEINjO8QYldyWYDNn53iLIdR9Lpjb-gXZEo" />
+  <img src="./images/hyva-mollie-header.jpg" />
 </p>
-<h1 align="center">Hyvä Checkout support for Mollie</h1>
+
+# Hyvä Checkout support for Mollie
+Hyvä Checkout is the ultimate checkout tool for Magento. It delivers better performance, better developer experience, higher conversion rates and AOV.
 
 ## About Mollie Payments
 With Mollie, you can accept payments and donations online and expand your customer base internationally with support for all major payment methods through a single integration. No need to spend weeks on paperwork or security compliance procedures. No more lost conversions because you don’t support a shopper’s favourite payment method or because they don’t feel safe. We made our products and API expansive, intuitive, and safe for merchants, customers and developers alike.
@@ -44,14 +46,14 @@ php bin/magento hyva:config:generate
 5. Generate the CSS files:
 
 ```bash
-npm --prefix vendor/hyva-themes/magento2-default-theme/web/tailwind/ run ci
+npm --prefix vendor/hyva-themes/magento2-default-theme/web/tailwind/ ci
 npm --prefix vendor/hyva-themes/magento2-default-theme/web/tailwind/ run build-prod
 ```
 
 Or from your theme:
 
 ```bash
-npm --prefix app/design/frontend/<Vendor>/<Theme>/web/tailwind run ci
+npm --prefix app/design/frontend/<Vendor>/<Theme>/web/tailwind ci
 npm --prefix app/design/frontend/<Vendor>/<Theme>/web/tailwind run build-prod
 ```
 
