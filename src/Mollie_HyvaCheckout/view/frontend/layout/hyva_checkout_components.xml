@@ -62,6 +62,18 @@
                     </argument>
                 </arguments>
             </block>
+
+            <block name="checkout.payment.method.mollie_methods_pointofsale"
+                   as="mollie_methods_pointofsale"
+                   template="Mollie_HyvaCheckout::component/payment/method/pointofsale.phtml"
+            >
+                <arguments>
+                    <argument name="mollie_method" xsi:type="string">mollie_methods_pointofsale</argument>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithTerminal
+                    </argument>
+                </arguments>
+            </block>
         </referenceBlock>
 
         <referenceContainer name="checkout.payment.methods.after">

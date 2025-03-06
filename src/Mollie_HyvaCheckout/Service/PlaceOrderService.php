@@ -88,6 +88,7 @@ class PlaceOrderService extends AbstractPlaceOrderService
 
             return $this->url->getUrl('checkout/cart');
         } catch (LocalizedException $exception) {
+            $this->checkoutSession->restoreQuote();
             throw new LocalizedException(__($this->formatExceptionMessages->execute($exception)));
         }
     }
