@@ -139,25 +139,25 @@ jobs:
           cd tests/End-2-End
           BASE_URL="https://magento.test/" npx playwright test
 
-      - name: Upload to TestRail
-        if: ${{ hashFiles('./tests/End-2-End/test-results/junit-report.xml') != '' }}
-        run: |
-          echo "Installing trcli"
-          pip install trcli --quiet
-
-          echo "Uploading test results to TestRail"
-          trcli -y \
-            -h https://${{ env.TESTRAIL_DOMAIN }} \
-            --project "Magento 2" \
-            --project-id ${{ env.TESTRAIL_PROJECT_ID }} \
-            --username ${{ env.TESTRAIL_USERNAME }} \
-            --password ${{ env.TESTRAIL_PASSWORD }} \
-            parse_junit \
-            --suite-id ${{ env.TESTRAIL_SUITE_ID }} \
-            --title "${{ env.TESTRAIL_RUN_NAME }}" \
-            -f "./tests/End-2-End/test-results/junit-report.xml" \
-            --case-matcher name \
-            --close-run
+#      - name: Upload to TestRail
+#        if: ${{ hashFiles('./tests/End-2-End/test-results/junit-report.xml') != '' }}
+#        run: |
+#          echo "Installing trcli"
+#          pip install trcli --quiet
+#
+#          echo "Uploading test results to TestRail"
+#          trcli -y \
+#            -h https://${{ env.TESTRAIL_DOMAIN }} \
+#            --project "Magento 2" \
+#            --project-id ${{ env.TESTRAIL_PROJECT_ID }} \
+#            --username ${{ env.TESTRAIL_USERNAME }} \
+#            --password ${{ env.TESTRAIL_PASSWORD }} \
+#            parse_junit \
+#            --suite-id ${{ env.TESTRAIL_SUITE_ID }} \
+#            --title "${{ env.TESTRAIL_RUN_NAME }}" \
+#            -f "./tests/End-2-End/test-results/junit-report.xml" \
+#            --case-matcher name \
+#            --close-run
 
       - name: Dump docker-compose logs
         if: always()
