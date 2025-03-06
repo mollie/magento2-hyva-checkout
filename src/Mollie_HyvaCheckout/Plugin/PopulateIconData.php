@@ -1,9 +1,14 @@
 <?php declare(strict_types=1);
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
 
 namespace Mollie\HyvaCheckout\Plugin;
 
 use Hyva\Checkout\Model\MethodMetaDataInterface;
 use Mollie\Payment\Helper\General as MollieHelper;
+use Mollie\Payment\Model\Mollie;
 
 class PopulateIconData
 {
@@ -23,7 +28,9 @@ class PopulateIconData
         }
 
         $method = $subject->getMethod();
-        if (!$this->isMollieMethod($method->getCode())) {
+        if (!$method instanceof Mollie ||
+            !$this->isMollieMethod($method->getCode())
+        ) {
             return;
         }
 
@@ -34,7 +41,6 @@ class PopulateIconData
             'attributes' => [
                 'title' => $method->getTitle()
             ]
-            
         ]);
     }
 
