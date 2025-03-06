@@ -12,7 +12,7 @@ export default class CheckoutPaymentPage {
   orderId = null;
 
   async selectPaymentMethod(page, name) {
-    const methodRow = page.locator('#payment-method-list li').filter({ hasText: name });
+    const methodRow = page.locator('#payment-method-list > div').filter({ hasText: name });
     const input = methodRow.locator('input');
 
     await input.click();
