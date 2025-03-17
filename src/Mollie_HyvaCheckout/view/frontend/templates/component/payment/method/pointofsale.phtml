@@ -1,4 +1,9 @@
 <?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 declare(strict_types=1);
 
 /** @var \Magento\Framework\Escaper $escaper */
@@ -6,7 +11,7 @@ declare(strict_types=1);
 ?>
 <div>
     <?php if (count($magewire->getTerminals())): ?>
-    <p><?= $escaper->escapeHtml('Select a terminal:'); ?></p>
+    <p class="font-bold"><?= $escaper->escapeHtml('Select a terminal:'); ?></p>
     <ul id="mollie-terminal-list">
         <?php foreach ($magewire->getTerminals() as $terminal): ?>
             <li>
@@ -27,34 +32,9 @@ declare(strict_types=1);
     </ul>
     <?php endif; ?>
 
-    <?php if (count($magewire->getTerminals())): ?>
+    <?php if ($magewire->getTerminals() === []): ?>
         <p class="mollie-no-terminal-found">
             <?= $escaper->escapeHtml('No terminals found. Unable to place order using the Point Of Sale method.'); ?>
         </p>
     <?php endif; ?>
-
-    <script>
-        window.addEventListener('checkout:payment:method-activate', event => {
-            if (event.detail.method !== 'mollie_methods_pointofsale') {
-                return;
-            }
-
-            hyvaCheckout.payment.activate(
-                'mollie_methods_pointofsale',
-                {
-                    validate() {
-                        if (document.querySelector('.mollie-no-terminal-found') !== null) {
-                            hyvaCheckout.payment.dispatchExceptionMessage(
-                                <?= $escaper->escapeJs(__('No terminals found. Unable to place order using the Point Of Sale method.')) ?>
-                            );
-                            return false;
-                        }
-
-                        return document.querySelectorAll('[name="mollie_selected_terminal"]:checked').length > 0;
-                    }
-                },
-                document.getElementById('mollie-terminal-list')
-            );
-        });
-    </script>
 </div>

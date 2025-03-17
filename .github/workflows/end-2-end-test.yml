@@ -41,14 +41,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - PHP_VERSION: php74-fpm
-            MAGENTO_VERSION: 2.4.3
+          - PHP_VERSION: php81-fpm
+            MAGENTO_VERSION: 2.4.4-p9
             NO_API_KEY_TEST: false
           - PHP_VERSION: php82-fpm
-            MAGENTO_VERSION: 2.4.7-p3
+            MAGENTO_VERSION: 2.4.7-p4
             NO_API_KEY_TEST: false
           - PHP_VERSION: php82-fpm
-            MAGENTO_VERSION: 2.4.7-p3
+            MAGENTO_VERSION: 2.4.7-p4
             NO_API_KEY_TEST: true
     runs-on: ubuntu-latest
     env:

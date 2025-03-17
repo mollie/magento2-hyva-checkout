@@ -6,6 +6,7 @@ services:
     container_name: magento-project-community-edition
     environment:
       - VIRTUAL_HOST=magento.test
+      - MAGENTO_VERSION
       - MOLLIE_API_KEY_TEST
       - HYVA_SSH_PRIVATE_KEY
       - NO_API_KEY_TEST

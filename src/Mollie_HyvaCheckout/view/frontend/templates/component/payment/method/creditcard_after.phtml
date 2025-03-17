@@ -1,0 +1,72 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<div>
+<?php
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard $magewire */
+$magewire = $block->getMagewire();
+
+if ($magewire->isComponentsEnabled()) {
+    ?>
+    <script>
+        window.addEventListener('checkout:payment:method-activate', event => {
+            let mollie;
+
+            if (event.detail.method !== 'mollie_methods_creditcard' ||
+                !document.getElementById('mollie-card-component')
+            ) {
+                return;
+            }
+
+            hyvaCheckout.payment.activate(
+                'mollie_methods_creditcard',
+                {
+                    async initialize() {
+                        if (!mollie) {
+                            mollie = await Mollie('<?= $escaper->escapeJs($magewire->profileId) ?>', {
+                                locale: '<?= $escaper->escapeJs($magewire->locale); ?>',
+                                testmode: <?= $escaper->escapeJs($magewire->isTestMode ? 'true' : 'false') ?>,
+                            });
+                        }
+
+                        let cardComponent = mollie.createComponent('card', {
+                            styles : {
+                                base: {
+                                    border: '1px solid #000',
+                                },
+                                invalid: {
+                                    color: '#dc2626',
+                                }
+                            }
+                        });
+
+                        cardComponent.mount('#mollie-card-component');
+                    },
+
+                    async validate() {
+                        let { token, error } = await mollie.createToken();
+                        if (error) {
+                            hyvaCheckout.payment.dispatchExceptionMessage(error.message)
+                            return false;
+                        }
+
+                        const component = '<?= $escaper->escapeJs($block->getNameInLayout()) ?>';
+
+                        await Magewire.find(component).setCardToken(token)
+                        return true
+                    }
+                },
+                document.querySelector('#mollie-card-component')
+            );
+        });
+    </script>
+    <?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>
+    <?php
+}
+?>
+</div>

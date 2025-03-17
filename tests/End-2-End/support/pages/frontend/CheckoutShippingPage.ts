@@ -45,23 +45,24 @@ export default class CheckoutShippingPage {
   async fillShippingAddress(page: Page, address: any) {
     const selectedCountry = await page.getByLabel('Country').inputValue();
 
-    for (const [field, value] of Object.entries(address.type)) {
-      if (['Email address', 'Password'].includes(field) && this.shouldSkipUsername) {
-        continue;
-      }
-
-      await page.locator('#hyva-checkout-container').getByText(field, { exact: true }).fill(value as string);
-    }
-
     for (const [field, value] of Object.entries(address.select)) {
       if (field !== 'country_id') {
         await page.getByText(field).selectOption(value as string);
       }
 
       if (field === 'country_id' && value !== selectedCountry) {
+        console.log('Switching country');
         await page.getByText(field).selectOption(value as string);
         await hyvaCheckout.waitForLoaderWithText(page, 'Switching country');
       }
+    }
+
+    for (const [field, value] of Object.entries(address.type)) {
+      if (['Email address', 'Password'].includes(field) && this.shouldSkipUsername) {
+        continue;
+      }
+
+      await page.locator('#hyva-checkout-container').getByText(field, { exact: true }).fill(value as string);
     }
   }
 

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <head>
+        <script src="https://js.mollie.com/v1/mollie.js" src_type="url" />
+    </head>
+
+    <body>
+        <referenceContainer name="magewire.plugin.scripts">
+            <block name="checkout.payment.methods.after.mollie_methods_applepay"
+                   as="mollie_methods_applepay_after"
+                   template="Mollie_HyvaCheckout::component/payment/method/applepay_after.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay
+                    </argument>
+                </arguments>
+            </block>
+
+            <block name="checkout.payment.methods.after.mollie_methods_creditcard"
+                   as="mollie_methods_creditcard_after"
+                   template="Mollie_HyvaCheckout::component/payment/method/creditcard_after.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard
+                    </argument>
+                </arguments>
+            </block>
+
+            <block name="checkout.payment.methods.after.mollie_methods_pointofsale"
+                   as="mollie_methods_pointofsale_after"
+                   template="Mollie_HyvaCheckout::component/payment/method/pointofsale_after.phtml">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithTerminal
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
