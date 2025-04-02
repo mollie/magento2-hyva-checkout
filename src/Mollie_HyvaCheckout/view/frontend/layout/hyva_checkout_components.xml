@@ -11,13 +11,7 @@
         <referenceBlock name="checkout.payment.methods">
             <block name="checkout.payment.method.mollie_methods_creditcard"
                    as="mollie_methods_creditcard"
-                   template="Mollie_HyvaCheckout::component/payment/method/creditcard.phtml">
-                <arguments>
-                    <argument name="magewire" xsi:type="object">
-                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard
-                    </argument>
-                </arguments>
-            </block>
+                   template="Mollie_HyvaCheckout::component/payment/method/creditcard.phtml" />
 
             <block name="checkout.payment.method.mollie_methods_creditcard_vault"
                    as="mollie_methods_creditcard_vault"
@@ -25,16 +19,6 @@
                 <arguments>
                     <argument name="magewire" xsi:type="object">
                         Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\CreditcardVault
-                    </argument>
-                </arguments>
-            </block>
-
-            <block name="checkout.payment.method.mollie_methods_applepay"
-                   as="mollie_methods_applepay"
-                   template="Mollie_HyvaCheckout::component/payment/method/applepay.phtml">
-                <arguments>
-                    <argument name="magewire" xsi:type="object">
-                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay
                     </argument>
                 </arguments>
             </block>
@@ -76,7 +60,7 @@
             </block>
         </referenceBlock>
 
-        <referenceContainer name="checkout.payment.methods.after">
+        <referenceContainer name="hyva.checkout.main">
             <block name="checkout.payment.methods.after.mollie_methods_applepay"
                    as="mollie_methods_applepay_after"
                    template="Mollie_HyvaCheckout::component/payment/method/applepay_after.phtml"/>

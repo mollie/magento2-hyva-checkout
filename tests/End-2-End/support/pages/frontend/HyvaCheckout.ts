@@ -1,3 +1,8 @@
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 export default class HyvaCheckout {
   private expect: any;
 
@@ -6,7 +11,7 @@ export default class HyvaCheckout {
   }
 
   async waitForLoadersToBeHidden(page: any) {
-    await page.waitForFunction(() =>
+    await page.evaluate(() =>
       Array.from(
         document.querySelectorAll(".magewire\\.notification\\.message"),
       ).every((element) => element.offsetParent === null),

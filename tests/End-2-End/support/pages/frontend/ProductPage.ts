@@ -24,6 +24,6 @@ export default class ProductPage {
 
         const productTitle = await page.locator('[data-ui-id="page-title-wrapper"]').innerText();
         await page.getByText(`You added ${productTitle} to your shopping cart.`).waitFor({ state: 'visible' });
-        await page.locator('[x-text="cart.summary_count"]').waitFor({ state: 'visible' });
+        await page.locator('#menu-cart-icon span').waitFor({ state: 'visible' });
     }
 }

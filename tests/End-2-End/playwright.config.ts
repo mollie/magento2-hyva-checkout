@@ -1,3 +1,8 @@
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
 import { defineConfig, devices } from '@playwright/test';
 
 /**
@@ -81,6 +86,7 @@ export default defineConfig({
       testIgnore: 'disable this option',
       use: {
         ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 1440 },
       }
     }
 

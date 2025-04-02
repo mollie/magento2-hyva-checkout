@@ -1,0 +1,40 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithTerminal $magewire */
+?>
+<script>
+    window.addEventListener('checkout:payment:method-activate', event => {
+        if (event.detail.method !== 'mollie_methods_pointofsale') {
+            return;
+        }
+
+        hyvaCheckout.payment.activate(
+            'mollie_methods_pointofsale',
+            {
+                validate() {
+                    if (document.querySelector('.mollie-no-terminal-found') !== null) {
+                        hyvaCheckout.payment.dispatchExceptionMessage(
+                            '<?= $escaper->escapeJs(__('No terminals found. Unable to place order using the Point Of Sale method.')) ?>',
+                            'error'
+                        );
+
+                        window.scroll({ top: 0, behavior: 'smooth' });
+
+                        return false;
+                    }
+
+                    return document.querySelectorAll('[name="mollie_selected_terminal"]:checked').length > 0;
+                }
+            },
+            document.getElementById('mollie-terminal-list')
+        );
+    });
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>
