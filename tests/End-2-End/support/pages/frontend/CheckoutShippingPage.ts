@@ -64,6 +64,8 @@ export default class CheckoutShippingPage {
 
       await page.locator('#hyva-checkout-container').getByText(field, { exact: true }).fill(value as string);
     }
+
+    await page.locator('#shipping-region').waitFor({state: 'hidden'});
   }
 
   async selectFirstAvailableShippingMethod(page: Page) {
