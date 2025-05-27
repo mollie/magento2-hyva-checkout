@@ -8,7 +8,7 @@
   ],
   "require": {
     "magento/framework": "*",
-    "hyva-themes/magento2-hyva-checkout": "^1.0.5|^1.1",
+    "hyva-themes/magento2-hyva-checkout": "^1.3",
     "mollie/magento2": ">=2.33.0"
   },
   "autoload": {

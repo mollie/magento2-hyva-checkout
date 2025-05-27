@@ -55,6 +55,11 @@ class PlaceOrderService extends AbstractPlaceOrderService
         $this->formatExceptionMessages = $formatExceptionMessages;
     }
 
+    public function canHandle(string $code): bool
+    {
+        return substr($code, 0, 6) == 'mollie';
+    }
+
     public function evaluateCompletion(EvaluationResultFactory $resultFactory, ?int $orderId = null): EvaluationResultInterface
     {
         return $resultFactory->createSuccess();
