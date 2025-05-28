@@ -10,6 +10,7 @@ use Magento\Checkout\Model\Session;
 use Magento\Framework\UrlInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magewirephp\Magewire\Component\Form;
 use Mollie\Payment\Config;
 use Mollie\Payment\Model\Adminhtml\Source\ApplePayIntegrationType;
@@ -34,6 +35,8 @@ class ApplePay extends Form
 
     private SupportedNetworks $supportedNetworks;
 
+    private DirectoryHelper $directoryHelper;
+
     private Config $config;
 
     public string $amount = '';
@@ -53,7 +56,8 @@ class ApplePay extends Form
         StoreManagerInterface $storeManager,
         CartRepositoryInterface $cartRepository,
         Config $config,
-        SupportedNetworks $supportedNetworks
+        SupportedNetworks $supportedNetworks,
+        DirectoryHelper $directoryHelper
     ) {
         parent::__construct($validator);
 
@@ -63,12 +67,13 @@ class ApplePay extends Form
         $this->cartRepository = $cartRepository;
         $this->config = $config;
         $this->supportedNetworks = $supportedNetworks;
+        $this->directoryHelper = $directoryHelper;
     }
 
     public function mount(): void
     {
         $cart = $this->checkoutSession->getQuote();
-        $this->countryId = $cart->getBillingAddress()->getCountryId();
+        $this->countryId = $cart->getBillingAddress()->getCountryId() ?: $this->directoryHelper->getDefaultCountry();
         $this->currencyCode = $cart->getQuoteCurrencyCode();
         $this->storeName = $this->storeManager->getStore()->getName();
     }
