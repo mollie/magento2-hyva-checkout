@@ -71,6 +71,32 @@ test('Validate that Mollie Components are loaded when refreshing the payment ste
   );
 });
 
+test('Validate that Mollie Components are unmounted correctly', async ({ page }) => {
+  test.skip(!process.env.mollie_available_methods.includes('creditcard'), 'Skipping test as Credit Card is not available');
+
+  await visitCheckoutPayment.visit(page);
+
+  await checkoutPaymentPage.selectPaymentMethod(page, 'Credit Card');
+
+  await page.reload();
+
+  await page.frameLocator('[name="cardHolder-input"]')
+    .locator('#cardHolder')
+    .fill('Mollie Tester');
+
+  page.on('console', message => {
+    if (message.text().includes('The component was not unmounted correctly.')) {
+      throw new Error('The component was not unmounted correctly.');
+    }
+  });
+
+  await page.getByText('Back to Shipping').click();
+
+  await hyvaCheckout.waitForLoadersToBeHidden(page);
+
+  await page.getByText('Proceed to review & payment').waitFor({ state: 'visible' });
+});
+
 // Skipped because of this bug: https://gitlab.hyva.io/hyva-checkout/checkout/-/issues/388
 test.skip('Validate that Mollie Components are loaded when switching between shipping and payment steps', async ({ page }) => {
   test.skip(!process.env.mollie_available_methods.includes('creditcard'), 'Skipping test as Credit Card is not available');
