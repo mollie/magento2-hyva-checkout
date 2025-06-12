@@ -15,7 +15,9 @@
         <referenceContainer name="magewire.plugin.scripts">
             <block name="checkout.payment.methods.after.mollie_methods_applepay"
                    as="mollie_methods_applepay_after"
-                   template="Mollie_HyvaCheckout::component/payment/method/applepay_after.phtml">
+                   template="Mollie_HyvaCheckout::component/payment/method/applepay_after.phtml"
+                   ifconfig="payment/mollie_methods_applepay/active"
+            >
                 <arguments>
                     <argument name="magewire" xsi:type="object">
                         Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay
@@ -25,7 +27,9 @@
 
             <block name="checkout.payment.methods.after.mollie_methods_creditcard"
                    as="mollie_methods_creditcard_after"
-                   template="Mollie_HyvaCheckout::component/payment/method/creditcard_after.phtml">
+                   template="Mollie_HyvaCheckout::component/payment/method/creditcard_after.phtml"
+                   ifconfig="payment/mollie_methods_creditcard/active"
+            >
                 <arguments>
                     <argument name="magewire" xsi:type="object">
                         Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard
@@ -35,7 +39,9 @@
 
             <block name="checkout.payment.methods.after.mollie_methods_pointofsale"
                    as="mollie_methods_pointofsale_after"
-                   template="Mollie_HyvaCheckout::component/payment/method/pointofsale_after.phtml">
+                   template="Mollie_HyvaCheckout::component/payment/method/pointofsale_after.phtml"
+                   ifconfig="payment/mollie_methods_pointofsale/active"
+            >
                 <arguments>
                     <argument name="magewire" xsi:type="object">
                         Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithTerminal
