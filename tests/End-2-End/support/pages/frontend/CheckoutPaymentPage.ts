@@ -15,6 +15,11 @@ export default class CheckoutPaymentPage {
     const methodRow = page.locator('#payment-method-list > div').filter({ hasText: name });
     const input = methodRow.locator('input');
 
+    if (await input.isChecked()) {
+        // If the input is already checked, we can skip clicking it again
+        return;
+    }
+
     await input.click();
 
     await hyvaCheckout.waitForLoaderWithText(page, 'Saving method');
