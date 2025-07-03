@@ -13,6 +13,7 @@ use Hyva\Checkout\Model\ConfigData\HyvaThemes\SystemConfigGeneral as HyvaCheckou
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Exception\State\InvalidTransitionException;
 use Magento\Quote\Api\Data\PaymentInterfaceFactory;
 use Magento\Quote\Api\PaymentMethodManagementInterface;
 use Magento\Quote\Model\Quote;
@@ -78,7 +79,11 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
         $payment->setMethod($defaultMethod);
 
         $quote->setPayment($payment);
-        $this->paymentMethodManagement->set($quote->getId(), $payment);
+        try {
+            $this->paymentMethodManagement->set($quote->getId(), $payment);
+        } catch (InvalidTransitionException $exception) {
+            // We are not able to set the payment method. Probably the address is not set yet.
+        }
     }
 
     /**
