@@ -36,7 +36,7 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
         Config $config,
         PaymentInterfaceFactory $paymentFactory,
         StoreManagerInterface $storeManager,
-        PaymentMethodManagementInterface $paymentMethodManagement,
+        PaymentMethodManagementInterface $paymentMethodManagement
     ) {
         $this->paymentFactory = $paymentFactory;
         $this->config = $config;
