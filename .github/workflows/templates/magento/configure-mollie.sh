@@ -46,6 +46,9 @@ bin/magento config:set payment/mollie_methods_twint/active 1
 # Enable Components
 bin/magento config:set payment/mollie_methods_creditcard/use_components 1
 
+# Set a default payment method
+bin/magento config:set payment/mollie_general/default_selected_method mollie_methods_ideal
+
 # Disable webhooks
 bin/magento config:set payment/mollie_general/use_webhooks custom_url
 
@@ -59,6 +62,10 @@ bin/magento config:set payment/mollie_general/currency 0 --scope=ch --scope-code
 # Polish scope
 bin/magento config:set currency/options/default PLN --scope=pl --scope-code=ch
 bin/magento config:set payment/mollie_general/currency 0 --scope=pl --scope-code=ch
+
+# Disable flat catalog
+bin/magento config:set catalog/frontend/flat_catalog_category 0
+bin/magento config:set catalog/frontend/flat_catalog_product 0
 
 # Disable the use of the base currency
 bin/magento config:set payment/mollie_general/currency 0
