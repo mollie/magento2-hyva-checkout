@@ -18,14 +18,12 @@ use Magento\Quote\Api\Data\PaymentInterfaceFactory;
 use Magento\Quote\Api\PaymentMethodManagementInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Mollie\Payment\Config;
 
 class SetDefaultSelectedPaymentMethod implements ObserverInterface
 {
     private PaymentInterfaceFactory $paymentFactory;
     private Config $config;
-    private StoreManagerInterface $storeManager;
     private ScopeConfigInterface $scopeConfig;
     private HyvaCheckoutConfig $hyvaCheckoutConfig;
     private PaymentMethodManagementInterface $paymentMethodManagement;
@@ -35,12 +33,10 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
         ScopeConfigInterface $scopeConfig,
         Config $config,
         PaymentInterfaceFactory $paymentFactory,
-        StoreManagerInterface $storeManager,
         PaymentMethodManagementInterface $paymentMethodManagement
     ) {
         $this->paymentFactory = $paymentFactory;
         $this->config = $config;
-        $this->storeManager = $storeManager;
         $this->scopeConfig = $scopeConfig;
         $this->hyvaCheckoutConfig = $hyvaCheckoutConfig;
         $this->paymentMethodManagement = $paymentMethodManagement;
@@ -56,7 +52,8 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
             return;
         }
 
-        $defaultMethod = $this->config->getDefaultSelectedMethod($this->storeManager->getStore()->getId());
+        $storeId = (int)$quote->getStoreId();
+        $defaultMethod = $this->config->getDefaultSelectedMethod($storeId);
         if (!$defaultMethod) {
             return;
         }
@@ -65,7 +62,7 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
             $defaultMethod = $this->getFirstAvailableMollieMethod($quote);
         }
 
-        if ($defaultMethod && !$this->isMethodActive($defaultMethod)) {
+        if ($defaultMethod && !$this->isMethodActive($defaultMethod, $storeId)) {
             return;
         }
 
@@ -89,12 +86,12 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
     /**
      * Check if that method is enabled for the current store
      */
-    private function isMethodActive(string $methodCode): bool
+    private function isMethodActive(string $methodCode, int $storeId): bool
     {
         return $this->scopeConfig->isSetFlag(
             sprintf('payment/%s/active', $methodCode),
             ScopeInterface::SCOPE_STORE,
-            $this->storeManager->getStore()->getCode()
+            $storeId
         );
     }
 
