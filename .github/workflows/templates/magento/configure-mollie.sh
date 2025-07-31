@@ -49,6 +49,9 @@ bin/magento config:set payment/mollie_methods_creditcard/use_components 1
 # Set a default payment method
 bin/magento config:set payment/mollie_general/default_selected_method mollie_methods_ideal
 
+# Enable issuers for KBC
+bin/magento config:set  payment/mollie_methods_kbc/issuer_list_type radio
+
 # Disable webhooks
 bin/magento config:set payment/mollie_general/use_webhooks custom_url
 
