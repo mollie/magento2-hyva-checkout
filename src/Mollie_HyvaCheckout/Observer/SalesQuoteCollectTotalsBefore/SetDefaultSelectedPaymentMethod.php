@@ -10,40 +10,39 @@ namespace Mollie\HyvaCheckout\Observer\SalesQuoteCollectTotalsBefore;
 
 use Hyva\Checkout\Model\CheckoutInformation\Luma;
 use Hyva\Checkout\Model\ConfigData\HyvaThemes\SystemConfigGeneral as HyvaCheckoutConfig;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\State\InvalidTransitionException;
+use Magento\Payment\Api\Data\PaymentMethodInterface;
+use Magento\Payment\Api\PaymentMethodListInterface;
 use Magento\Quote\Api\Data\PaymentInterfaceFactory;
 use Magento\Quote\Api\PaymentMethodManagementInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Mollie\Payment\Config;
 
 class SetDefaultSelectedPaymentMethod implements ObserverInterface
 {
     private PaymentInterfaceFactory $paymentFactory;
     private Config $config;
-    private StoreManagerInterface $storeManager;
-    private ScopeConfigInterface $scopeConfig;
     private HyvaCheckoutConfig $hyvaCheckoutConfig;
     private PaymentMethodManagementInterface $paymentMethodManagement;
+    private PaymentMethodListInterface $paymentMethodList;
+
+    private array $methodList = [];
+    private int $storeId;
 
     public function __construct(
         HyvaCheckoutConfig $hyvaCheckoutConfig,
-        ScopeConfigInterface $scopeConfig,
         Config $config,
         PaymentInterfaceFactory $paymentFactory,
-        StoreManagerInterface $storeManager,
-        PaymentMethodManagementInterface $paymentMethodManagement
+        PaymentMethodManagementInterface $paymentMethodManagement,
+        PaymentMethodListInterface $paymentMethodList
     ) {
         $this->paymentFactory = $paymentFactory;
         $this->config = $config;
-        $this->storeManager = $storeManager;
-        $this->scopeConfig = $scopeConfig;
         $this->hyvaCheckoutConfig = $hyvaCheckoutConfig;
         $this->paymentMethodManagement = $paymentMethodManagement;
+        $this->paymentMethodList = $paymentMethodList;
     }
 
     public function execute(Observer $observer): void
@@ -56,13 +55,14 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
             return;
         }
 
-        $defaultMethod = $this->config->getDefaultSelectedMethod($this->storeManager->getStore()->getId());
+        $this->storeId = (int)$quote->getStoreId();
+        $defaultMethod = $this->config->getDefaultSelectedMethod();
         if (!$defaultMethod) {
             return;
         }
 
         if ($defaultMethod == 'first_mollie_method') {
-            $defaultMethod = $this->getFirstAvailableMollieMethod($quote);
+            $defaultMethod = $this->getFirstAvailableMollieMethod();
         }
 
         if ($defaultMethod && !$this->isMethodActive($defaultMethod)) {
@@ -91,11 +91,16 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
      */
     private function isMethodActive(string $methodCode): bool
     {
-        return $this->scopeConfig->isSetFlag(
-            sprintf('payment/%s/active', $methodCode),
-            ScopeInterface::SCOPE_STORE,
-            $this->storeManager->getStore()->getCode()
-        );
+        $methods = $this->getMethodList();
+
+        /** @var PaymentMethodInterface $method */
+        foreach ($methods as $method) {
+            if ($method->getCode() === $methodCode) {
+                return $method->getIsActive();
+            }
+        }
+
+        return false;
     }
 
     private function isHyvaCheckoutActive(): bool
@@ -108,9 +113,9 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
         return $quote->getPayment()->getMethod() !== null;
     }
 
-    private function getFirstAvailableMollieMethod(Quote $quote): ?string
+    private function getFirstAvailableMollieMethod(): ?string
     {
-        $methods = $this->paymentMethodManagement->getList($quote->getId());
+        $methods = $this->getMethodList();
 
         foreach ($methods as $method) {
             $methodCode = $method->getCode();
@@ -123,5 +128,15 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
         }
 
         return null;
+    }
+
+    private function getMethodList(): array
+    {
+        if ($this->methodList !== []) {
+            return $this->methodList;
+        }
+
+        $this->methodList = $this->paymentMethodList->getList($this->storeId);
+        return $this->methodList;
     }
 }
