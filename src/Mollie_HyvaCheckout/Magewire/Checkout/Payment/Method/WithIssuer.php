@@ -1,7 +1,7 @@
 <?php
 /*
- *  Copyright Magmodules.eu. All rights reserved.
- *  See COPYING.txt for license details.
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
  */
 
 namespace Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method;
@@ -56,8 +56,7 @@ class WithIssuer extends Form
     {
         $quote = $this->sessionCheckout->getQuote();
 
-        $mollieApiClient = $this->mollieApiClient->loadByStore();
-        $this->issuers = $this->getIssuers->execute($mollieApiClient, $this->method, 'list');
+        $this->issuers = $this->getIssuers->execute($this->method, 'list');
 
         if ($selectedIssuer = $quote->getPayment()->getAdditionalInformation('selected_issuer')) {
             $this->selectedIssuer = $selectedIssuer;
