@@ -31,6 +31,7 @@
         <script>
             window.addEventListener('checkout:payment:method-activate', (event) => {
                 if (event.detail.method !== 'mollie_methods_applepay') {
+                    hyvaCheckout.validation.remove('mollie_methods_applepay');
                     return;
                 }
 
