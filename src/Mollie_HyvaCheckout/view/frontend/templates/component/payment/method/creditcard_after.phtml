@@ -6,35 +6,37 @@
 ?>
 <div>
 <?php
-/** @var \Magento\Framework\Escaper $escaper */
-/** @var \Magento\Framework\View\Element\Template $block */
-/** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard $magewire */
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var Creditcard $magewire */
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard;
+
 $magewire = $block->getMagewire();
 
 if ($magewire->isComponentsEnabled()) {
     ?>
     <script>
         (() => {
-            let mollie, cardComponent, state;
-            window.addEventListener('checkout:payment:method-activate', event => {
-                if (event.detail.method !== 'mollie_methods_creditcard' ||
-                    !document.getElementById('mollie-card-component')
-                ) {
-                    return;
-                }
+            let mollie = null;
+            let cardComponent = null;
 
-                hyvaCheckout.payment.activate(
-                    'mollie_methods_creditcard',
-                    {
-                        async initialize() {
-                            if (!mollie) {
+            hyvaCheckout.api.after(() => {
+                hyvaCheckout.payment.registerMethod({
+                    code: 'mollie_methods_creditcard',
+
+                    method: {
+                        initialize: async function () {
+                            if (mollie == null) {
                                 mollie = await Mollie('<?= $escaper->escapeJs($magewire->profileId) ?>', {
                                     locale: '<?= $escaper->escapeJs($magewire->locale); ?>',
                                     testmode: <?= $escaper->escapeJs($magewire->isTestMode ? 'true' : 'false') ?>,
                                 });
                             }
 
-                            if (!cardComponent) {
+                            if (cardComponent === null) {
                                 cardComponent = mollie.createComponent('card', {
                                     styles: {
                                         base: {
@@ -48,32 +50,13 @@ if ($magewire->isComponentsEnabled()) {
                             }
 
                             cardComponent.mount('#mollie-card-component');
-                            state = 'mounted';
-
-                            document.querySelector('.btn-previous')?.addEventListener('click', () => {
-                                if (state !== 'mounted') {
-                                    return;
-                                }
-
-                                cardComponent.unmount();
-                                state = 'unmounted';
-                            })
-
-                            document.querySelectorAll('[name="payment-method-option"]').forEach(element => {
-                                element.addEventListener('change', event => {
-                                    if (event.target.value === 'mollie_methods_creditcard' &&
-                                        state !== 'mounted'
-                                    ) {
-                                        return;
-                                    }
-
-                                    cardComponent.unmount();
-                                    state = 'unmounted';
-                                })
-                            })
                         },
 
-                        async validate() {
+                        uninitialize: async function () {
+                            cardComponent.unmount();
+                        },
+
+                        validate: async function() {
                             let {token, error} = await mollie.createToken();
                             if (error) {
                                 hyvaCheckout.payment.dispatchExceptionMessage(error.message)
@@ -85,9 +68,8 @@ if ($magewire->isComponentsEnabled()) {
                             await Magewire.find(component).setCardToken(token)
                             return true
                         }
-                    },
-                    document.querySelector('#mollie-card-component')
-                );
+                    }
+                });
             });
         })();
     </script>
