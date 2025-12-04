@@ -3,7 +3,14 @@
  * Copyright Magmodules.eu. All rights reserved.
  * See COPYING.txt for license details.
  */
+
+/** @var Creditcard $block */
+
+use Mollie\HyvaCheckout\Block\Checkout\Payment\Creditcard;
+
+if ($block->isComponentsEnabled()):
 ?>
 <form>
     <div id="mollie-card-component" wire:ignore></div>
 </form>
+<?php endif; ?>
