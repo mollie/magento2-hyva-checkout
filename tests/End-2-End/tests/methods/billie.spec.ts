@@ -3,7 +3,7 @@
  * See COPYING.txt for license details.
  */
 
-import { test, expect } from '@playwright/test';
+import {expect, test} from '@playwright/test';
 import CheckoutPaymentPage from "Pages/frontend/CheckoutPaymentPage";
 import VisitCheckoutPaymentCompositeAction from "CompositeActions/VisitCheckoutPaymentCompositeAction";
 import MollieHostedPaymentPage from "Pages/mollie/MollieHostedPaymentPage";
@@ -20,6 +20,7 @@ const cartPage = new CartPage();
 
 test.describe('Check that extra validations for Billie are working as expected', () => {
     test('[C4228955] Validate that a company is required to place an order with Billie', async ({ page }) => {
+        test.skip(true, 'Skipped due to Hyvä Checkout bug: https://gitlab.hyva.io/hyva-checkout/checkout/-/issues/468');
         test.skip(!process.env.mollie_available_methods.includes('billie'), 'Skipping test as Billie is not available');
 
         await visitCheckoutPayment.visit(page, 'german-shipping-address-without-company.json');
