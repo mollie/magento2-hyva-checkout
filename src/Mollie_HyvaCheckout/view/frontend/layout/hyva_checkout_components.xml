@@ -11,7 +11,9 @@
         <referenceBlock name="checkout.payment.methods">
             <block name="checkout.payment.method.mollie_methods_creditcard"
                    as="mollie_methods_creditcard"
-                   template="Mollie_HyvaCheckout::component/payment/method/creditcard.phtml" />
+                   class="Mollie\HyvaCheckout\Block\Checkout\Payment\Creditcard"
+                   template="Mollie_HyvaCheckout::component/payment/method/creditcard.phtml"
+            />
 
             <block name="checkout.payment.method.mollie_methods_creditcard_vault"
                    as="mollie_methods_creditcard_vault"

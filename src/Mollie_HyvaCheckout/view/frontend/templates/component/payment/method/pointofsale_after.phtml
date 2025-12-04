@@ -6,35 +6,38 @@
 
 declare(strict_types=1);
 
-/** @var \Magento\Framework\Escaper $escaper */
-/** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithTerminal $magewire */
+/** @var Escaper $escaper */
+/** @var WithTerminal $magewire */
+
+use Magento\Framework\Escaper;
+use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithTerminal;
+
+
 ?>
 <script>
-    window.addEventListener('checkout:payment:method-activate', event => {
-        if (event.detail.method !== 'mollie_methods_pointofsale') {
-            return;
-        }
+    (() => {
+        hyvaCheckout.api.after(() => {
+            hyvaCheckout.payment.registerMethod({
+                code: 'mollie_methods_pointofsale',
 
-        hyvaCheckout.payment.activate(
-            'mollie_methods_pointofsale',
-            {
-                validate() {
-                    if (document.querySelector('.mollie-no-terminal-found') !== null) {
-                        hyvaCheckout.payment.dispatchExceptionMessage(
-                            '<?= $escaper->escapeJs(__('No terminals found. Unable to place order using the Point Of Sale method.')) ?>',
-                            'error'
-                        );
+                method: {
+                    validate: async function () {
+                        if (document.querySelector('.mollie-no-terminal-found') !== null) {
+                            hyvaCheckout.payment.dispatchExceptionMessage(
+                                '<?= $escaper->escapeJs(__('No terminals found. Unable to place order using the Point Of Sale method.')) ?>',
+                                'error'
+                            );
 
-                        window.scroll({ top: 0, behavior: 'smooth' });
+                            window.scroll({ top: 0, behavior: 'smooth' });
 
-                        return false;
+                            return false;
+                        }
+
+                        return document.querySelectorAll('[name="mollie_selected_terminal"]:checked').length > 0;
                     }
-
-                    return document.querySelectorAll('[name="mollie_selected_terminal"]:checked').length > 0;
                 }
-            },
-            document.getElementById('mollie-terminal-list')
-        );
-    });
+            })
+        })
+    })();
 </script>
 <?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

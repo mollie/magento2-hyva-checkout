@@ -109,6 +109,10 @@ jobs:
 
       - name: Configure Mollie
         run: |
+          if [ ${{ matrix.NO_API_KEY_TEST }} == 'true' ]; then
+            docker exec magento-project-community-edition ./retry "bin/magento config:set payment/mollie_general/default_selected_method mollie_methods_ideal"
+          fi
+
           if [ ${{ matrix.NO_API_KEY_TEST }} == 'false' ]; then
             docker exec magento-project-community-edition /bin/bash /data/configure-mollie.sh
           fi
