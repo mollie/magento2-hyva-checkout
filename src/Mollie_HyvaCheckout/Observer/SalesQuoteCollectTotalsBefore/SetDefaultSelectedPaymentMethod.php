@@ -51,7 +51,9 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
         $quote = $observer->getData('quote');
 
         // Don't override if the quote isn't available yet or if a payment method is already set.
-        if (!$quote->getId() || $this->quoteHasActivePaymentMethod($quote)) {
+        if (!$quote->getId() ||
+            !$this->config->getApiKey((int)$quote->getStoreId()) ||
+            $this->quoteHasActivePaymentMethod($quote)) {
             return;
         }
 
