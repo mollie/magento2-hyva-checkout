@@ -50,9 +50,15 @@ export default class OrdersPage {
       // Sometimes Playwright is too fast.
       await page.waitForTimeout(2000);
       await expect(await page.getByRole('button', { name: 'Fetch Status' })).toBeVisible();
+
+      const responsePromise = page.waitForResponse(
+          response => response.url().includes('/mollie/action/fetchOrderStatus')
+      );
+
       await page.locator('.fetch-mollie-payment-status').click();
 
-      await expect(await page.getByText('The latest status from Mollie')).toBeVisible({ timeout: 30000 });
+      await responsePromise;
+      await page.reload();
     }
 
     async assertOrderStatusIs(page, status: string) {

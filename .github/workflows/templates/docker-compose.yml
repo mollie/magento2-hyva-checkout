@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   magento:
     image: michielgerritsen/magento-project-community-edition:${PHP_VERSION}-magento${MAGENTO_VERSION}-sample-data

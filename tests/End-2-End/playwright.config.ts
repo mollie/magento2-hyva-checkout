@@ -3,7 +3,7 @@
  * See COPYING.txt for license details.
  */
 
-import { defineConfig, devices } from '@playwright/test';
+import {defineConfig, devices} from '@playwright/test';
 
 /**
  * Read environment variables from file.
@@ -37,6 +37,8 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
+  /* Don't run the whole test suite but fail fast */
+  maxFailures: process.env.CI ? 3 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: process.env.CI ?
     [['html', { open: 'never' }], ['list'], ['github'], ['junit', testRailOptions]] :

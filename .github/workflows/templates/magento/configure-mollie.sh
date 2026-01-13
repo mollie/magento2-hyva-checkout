@@ -14,6 +14,7 @@ bin/magento config:set payment/mollie_general/profileid pfl_8yCABHRz37
 magerun2 config:store:set payment/mollie_general/apikey_test $MOLLIE_API_KEY_TEST --encrypt
 bin/magento config:set payment/mollie_general/enabled 1
 bin/magento config:set payment/mollie_general/type test
+bin/magento config:set payment/mollie_general/process_transactions_in_the_queue 0
 
 # Enable all payment methods
 bin/magento config:set payment/mollie_methods_applepay/active 1
@@ -24,7 +25,6 @@ bin/magento config:set payment/mollie_methods_creditcard/active 1
 bin/magento config:set payment/mollie_methods_giftcard/active 1
 bin/magento config:set payment/mollie_methods_ideal/active 1
 bin/magento config:set payment/mollie_methods_kbc/active 1
-bin/magento config:set payment/mollie_methods_klarnasliceit/active 1
 bin/magento config:set payment/mollie_methods_paypal/active 1
 bin/magento config:set payment/mollie_methods_przelewy24/active 1
 bin/magento config:set payment/mollie_methods_payconiq/active 1
@@ -33,7 +33,6 @@ bin/magento config:set payment/mollie_methods_bancontact/active 1
 bin/magento config:set payment/mollie_methods_bancomatpay/active 1
 bin/magento config:set payment/mollie_methods_belfius/active 1
 bin/magento config:set payment/mollie_methods_eps/active 1
-bin/magento config:set payment/mollie_methods_klarnapaylater/active 1
 bin/magento config:set payment/mollie_methods_paymentlink/active 1
 bin/magento config:set payment/mollie_methods_paysafecard/active 1
 bin/magento config:set payment/mollie_methods_pointofsale/active 1

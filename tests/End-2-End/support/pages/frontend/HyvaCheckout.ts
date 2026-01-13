@@ -17,7 +17,7 @@ export default class HyvaCheckout {
       ).every((element) => element.offsetParent === null),
     );
 
-    await this.expect(page.locator("#magewire-loader")).toBeHidden();
+    await this.expect(page.locator("#magewire-loader-overlay")).toBeHidden();
   }
 
   async waitForLoaderWithText(page: any, text: string) {
