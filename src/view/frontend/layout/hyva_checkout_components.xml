@@ -8,6 +8,13 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
 >
     <body>
+        <referenceContainer name="checkout.payment.methods.before">
+            <block name="checkout.payment.method.mollie_methods_expresscomponents"
+                   template="Mollie_HyvaCheckout::component/payment/method/express_components.phtml"
+                   ifconfig="payment/mollie_methods_expresscomponents/active"
+            />
+        </referenceContainer>
+
         <referenceBlock name="checkout.payment.methods">
             <block name="checkout.payment.method.mollie_methods_creditcard"
                    as="mollie_methods_creditcard"
