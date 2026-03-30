@@ -47,18 +47,20 @@ export default class OrdersPage {
     }
 
     async callFetchStatus(page ) {
-      // Sometimes Playwright is too fast.
-      await page.waitForTimeout(2000);
-      await expect(await page.getByRole('button', { name: 'Fetch Status' })).toBeVisible();
+      const fetchStatusButton = page.getByRole('button', { name: 'Fetch Status' });
+      await expect(fetchStatusButton).toBeVisible();
 
       const responsePromise = page.waitForResponse(
           response => response.url().includes('/mollie/action/fetchOrderStatus')
       );
 
-      await page.locator('.fetch-mollie-payment-status').click();
+      await fetchStatusButton.click();
 
       await responsePromise;
-      await page.reload();
+
+      // Navigate to the same URL instead of reload to avoid ERR_ABORTED/frame detach issues
+      await page.goto(page.url(), {waitUntil: 'domcontentloaded'});
+      await page.waitForLoadState('load');
     }
 
     async assertOrderStatusIs(page, status: string) {
