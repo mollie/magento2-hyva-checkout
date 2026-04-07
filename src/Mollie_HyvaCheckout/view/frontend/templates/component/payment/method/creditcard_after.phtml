@@ -18,7 +18,7 @@ $magewire = $block->getMagewire();
 
 if ($magewire->isComponentsEnabled()) {
     ?>
-    <script>
+    <script wire:ignore>
         (() => {
             let mollie = null;
             let cardComponent = null;
