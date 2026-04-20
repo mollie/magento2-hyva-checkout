@@ -20,9 +20,9 @@ export default class ProductPage {
 
         await page.locator('#search').focus();
 
-        await page.locator('#product-addtocart-button').click();
+        const productTitle = await page.locator('h1 [data-ui-id="page-title-wrapper"]').innerText();
 
-        const productTitle = await page.locator('[data-ui-id="page-title-wrapper"]').innerText();
+        await page.locator('#product-addtocart-button').click();
         await page.getByText(`You added ${productTitle} to your shopping cart.`).waitFor({ state: 'visible' });
         await page.locator('#menu-cart-icon span').waitFor({ state: 'visible' });
 

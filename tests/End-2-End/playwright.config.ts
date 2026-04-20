@@ -31,6 +31,8 @@ export default defineConfig({
   testDir: './tests/',
   /* Run tests in files in parallel */
   fullyParallel: true,
+  /* Stop execution after 2 failing tests */
+  maxFailures: 2,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -51,6 +53,9 @@ export default defineConfig({
     trace: 'retain-on-failure',
 
     ignoreHTTPSErrors: true,
+
+    /* Fail locator actions quickly instead of waiting out the full test timeout. */
+    actionTimeout: 10_000,
   },
 
   timeout: 60000,
