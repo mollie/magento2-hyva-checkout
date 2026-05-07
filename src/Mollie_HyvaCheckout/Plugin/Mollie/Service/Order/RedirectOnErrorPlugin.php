@@ -13,13 +13,16 @@ class RedirectOnErrorPlugin
 {
     private Config $config;
     private UrlInterface $urlBuilder;
+    private \Hyva\Checkout\Model\Config $hyvaCheckoutConfig;
 
     public function __construct(
         Config $config,
-        UrlInterface $urlBuilder
+        UrlInterface $urlBuilder,
+        \Hyva\Checkout\Model\Config $hyvaCheckoutConfig,
     ) {
         $this->config = $config;
         $this->urlBuilder = $urlBuilder;
+        $this->hyvaCheckoutConfig = $hyvaCheckoutConfig;
     }
 
     /**
@@ -31,6 +34,10 @@ class RedirectOnErrorPlugin
      */
     public function afterGetUrl(RedirectOnError $subject, string $result): string
     {
+        if (!$this->hyvaCheckoutConfig->isHyvaCheckout($this->hyvaCheckoutConfig->getActiveCheckoutNamespace())) {
+            return $result;
+        }
+
         $redirectTo = $this->config->redirectWhenTransactionFailsTo();
 
         if ($redirectTo === RedirectUserWhenTransactionFails::REDIRECT_TO_CHECKOUT_SHIPPING) {
