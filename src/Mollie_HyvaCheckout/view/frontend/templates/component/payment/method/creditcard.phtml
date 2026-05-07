@@ -8,9 +8,9 @@
 
 use Mollie\HyvaCheckout\Block\Checkout\Payment\Creditcard;
 
-if ($block->isComponentsEnabled()):
+if (!$block->isComponentsEnabled()) {
+    echo '<div></div>';
+}
 ?>
-<form>
-    <div id="mollie-card-component" wire:ignore></div>
-</form>
-<?php endif; ?>
+
+<div id="mollie-card-component" wire:ignore></div>
