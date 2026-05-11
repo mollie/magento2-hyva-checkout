@@ -16,7 +16,7 @@ declare(strict_types=1);
     <div><?= $escaper->escapeHtml($magewire->currentStatus); ?></div>
 
     <?php if ($magewire->status == 'canceled'): ?>
-        <button class="btn btn-primary mt-4" wire:click="retryOrder"><?= __('Retry'); ?></button>
+        <button class="btn btn-primary mt-4" wire:click="retryOrder"><?= $escaper->escapeHtml(__('Retry')); ?></button>
     <?php endif; ?>
 
     <?php if ($magewire->status == 'processing'): ?>

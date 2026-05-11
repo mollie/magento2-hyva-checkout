@@ -3,6 +3,8 @@
  * Copyright Magmodules.eu. All rights reserved.
  * See COPYING.txt for license details.
  */
+
+/** @var \Magento\Framework\Escaper $escaper */
 ?>
 <div>
     <ul class="ml-4 mollie-issuer-list">
@@ -14,9 +16,9 @@
             echo '
                 <li class="my-1 mollie-issuer">
                    <label>
-                       <input type="radio" name="selectedIssuer" wire:model="selectedIssuer" value="' . $issuer['id'] . '">
-                       <img class="mx-2 inline" src="' . $issuer['image']['svg'] . '" alt="' . $issuer['name'] . '">
-                       ' . $issuer['name'] . '
+                       <input type="radio" name="selectedIssuer" wire:model="selectedIssuer" value="' . $escaper->escapeHtmlAttr($issuer['id']) . '">
+                       <img class="mx-2 inline" src="' . $escaper->escapeUrl($issuer['image']['svg']) . '" alt="' . $escaper->escapeHtmlAttr($issuer['name']) . '">
+                       ' . $escaper->escapeHtml($issuer['name']) . '
                    </label>
                </li>
            ';

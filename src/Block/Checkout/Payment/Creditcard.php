@@ -14,7 +14,7 @@ use Mollie\Payment\Config;
 use Mollie\Payment\Service\Mollie\GetCustomerMandates;
 use Mollie\Payment\Service\Mollie\SavedCardConsentText;
 
-final class Creditcard extends Template
+class Creditcard extends Template
 {
     private const CARD_LABEL_SLUG_MAP = [
         'Visa'             => 'visa',

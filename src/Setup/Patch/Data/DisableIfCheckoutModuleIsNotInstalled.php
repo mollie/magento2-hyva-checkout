@@ -25,14 +25,13 @@ class DisableIfCheckoutModuleIsNotInstalled implements DataPatchInterface
         $this->moduleManager = $moduleManager;
     }
 
-    public function apply()
+    public function apply(): self
     {
-        // Disable this module if Hyva Checkout is not installed. This is to prevent dependency errors.
-        if ($this->moduleManager->isEnabled('Hyva_Checkout')) {
-            return;
+        if (!$this->moduleManager->isEnabled('Hyva_Checkout')) {
+            $this->moduleStatus->setIsEnabled(false, ['Mollie_HyvaCheckout']);
         }
 
-        $this->moduleStatus->setIsEnabled(false, ['Mollie_HyvaCheckout']);
+        return $this;
     }
 
     public function getAliases(): array

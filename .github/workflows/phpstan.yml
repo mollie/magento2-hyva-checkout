@@ -1,0 +1,42 @@
+name: phpstan
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                include:
+                    - PHP_VERSION: php82-fpm
+                      MAGENTO_VERSION: 2.4.7-p8
+                    - PHP_VERSION: php84-fpm
+                      MAGENTO_VERSION: 2.4.8-p3
+
+        name: PHP ${{ matrix.PHP_VERSION }} Magento ${{ matrix.MAGENTO_VERSION }}
+
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Start Docker
+              run: docker run --detach --name magento-project-community-edition -e HYVA_SSH_PRIVATE_KEY="${{ secrets.HYVA_SSH_PRIVATE_KEY }}" ghcr.io/controlaltdelete-nl/magento2-in-a-box/magento-project-community-edition:${{ matrix.PHP_VERSION }}-magento${{ matrix.MAGENTO_VERSION }}
+
+            - name: Remove version from composer.json
+              run: sed -i '/version/d' ./composer.json
+
+            - name: Copy install-hyva script into the container
+              run: docker cp .github/workflows/templates/magento/install-hyva.sh magento-project-community-edition:/data/install-hyva.sh
+
+            - name: Install Hyvä Checkout
+              run: docker exec -e HYVA_SSH_PRIVATE_KEY="${{ secrets.HYVA_SSH_PRIVATE_KEY }}" magento-project-community-edition /bin/bash /data/install-hyva.sh
+
+            - name: Upload our code into the docker container
+              run: docker cp $(pwd) magento-project-community-edition:/data/extensions/
+
+            - name: Install the extensions in Magento
+              run: docker exec magento-project-community-edition ./install-composer-package mollie/magento2:@dev mollie/magento2-hyva-checkout:@dev
+
+            - name: Activate the extensions
+              run: docker exec magento-project-community-edition ./retry "php bin/magento module:enable Mollie_Payment Mollie_HyvaCheckout && php bin/magento setup:di:compile && php bin/magento setup:upgrade --keep-generated"
+
+            - name: Run PHPStan
+              run: docker exec magento-project-community-edition /bin/bash -c "./vendor/bin/phpstan analyse --no-progress -c /data/extensions/*/phpstan.neon /data/extensions"

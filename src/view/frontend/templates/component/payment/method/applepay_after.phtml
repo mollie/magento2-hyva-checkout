@@ -49,7 +49,7 @@ use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay;
                                     let request = {
                                         countryCode: "<?php echo $escaper->escapeJs($magewire->countryId); ?>",
                                         currencyCode: "<?php echo $escaper->escapeJs($magewire->currencyCode); ?>",
-                                        supportedNetworks: <?php echo json_encode($magewire->getSupportedNetworks()); ?>,
+                                        supportedNetworks: <?php /* @noEscape */ echo json_encode($magewire->getSupportedNetworks()); ?>,
                                         merchantCapabilities: ['supports3DS'],
                                         total: {
                                             label: "<?php echo $escaper->escapeJs($magewire->storeName); ?>",
@@ -82,7 +82,7 @@ use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay;
 
                                     session.onvalidatemerchant = (event) => {
                                         window.fetch(
-                                            "<?php echo $magewire->getApplePayValidationUrl(); ?>",
+                                            "<?php echo $escaper->escapeUrl($magewire->getApplePayValidationUrl()); ?>",
                                             {
                                                 method: 'POST',
                                                 mode: 'cors',

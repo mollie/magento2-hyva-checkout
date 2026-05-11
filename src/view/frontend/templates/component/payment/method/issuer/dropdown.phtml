@@ -12,7 +12,7 @@ $magewire = $block->getMagewire();
     <select wire:model="selectedIssuer">
         <option value=""><?= $escaper->escapeHtml(__('Please select')); ?></option>
         <?php foreach ($magewire->issuers as $issuer): ?>
-            <option value="<?= $issuer['id'] ?>"><?= $issuer['name']; ?></option>
+            <option value="<?= $escaper->escapeHtmlAttr($issuer['id']); ?>"><?= $escaper->escapeHtml($issuer['name']); ?></option>
         <?php endforeach; ?>
     </select>
 </div>
