@@ -71,6 +71,36 @@ class Creditcard extends Form
         return $value;
     }
 
+    public function setMandateId(string $mandateId): void
+    {
+        $quote = $this->sessionCheckout->getQuote();
+        $quote->getPayment()->setAdditionalInformation('mollie_mandate_id', $mandateId);
+        $this->quoteRepository->save($quote);
+    }
+
+    public function clearMandate(): void
+    {
+        $quote = $this->sessionCheckout->getQuote();
+        $quote->getPayment()->setAdditionalInformation('mollie_mandate_id', null);
+        $this->quoteRepository->save($quote);
+    }
+
+    public function enableSaveCard(string $consentTimestamp): void
+    {
+        $quote = $this->sessionCheckout->getQuote();
+        $quote->getPayment()->setAdditionalInformation('mollie_save_card', true);
+        $quote->getPayment()->setAdditionalInformation('mollie_consent_timestamp', $consentTimestamp);
+        $this->quoteRepository->save($quote);
+    }
+
+    public function disableSaveCard(): void
+    {
+        $quote = $this->sessionCheckout->getQuote();
+        $quote->getPayment()->setAdditionalInformation('mollie_save_card', null);
+        $quote->getPayment()->setAdditionalInformation('mollie_consent_timestamp', null);
+        $this->quoteRepository->save($quote);
+    }
+
     public function isComponentsEnabled(): bool
     {
         return $this->config->creditcardUseComponents() && $this->config->getProfileId();

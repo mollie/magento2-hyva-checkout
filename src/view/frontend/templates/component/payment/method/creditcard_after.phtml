@@ -22,6 +22,84 @@ if ($magewire->isComponentsEnabled()) {
         (() => {
             let mollie = null;
             let cardComponent = null;
+            let isMounted = false;
+            const component = '<?= $escaper->escapeJs($block->getNameInLayout()) ?>';
+
+            async function initMollie() {
+                if (mollie !== null) {
+                    return;
+                }
+                mollie = await Mollie('<?= $escaper->escapeJs($magewire->profileId) ?>', {
+                    locale: '<?= $escaper->escapeJs($magewire->locale) ?>',
+                    testMode: <?= $magewire->isTestMode ? 'true' : 'false' ?>,
+                });
+            }
+
+            async function mountCardComponent() {
+                if (isMounted) {
+                    return;
+                }
+                await initMollie();
+                if (cardComponent === null) {
+                    cardComponent = mollie.createComponent('card', {
+                        styles: {
+                            base: {
+                                border: '1px solid #000',
+                            },
+                            invalid: {
+                                color: '#dc2626',
+                            }
+                        }
+                    });
+                }
+                cardComponent.mount('#mollie-card-component');
+                isMounted = true;
+            }
+
+            function unmountCardComponent() {
+                if (isMounted && cardComponent) {
+                    cardComponent.unmount();
+                    isMounted = false;
+                }
+            }
+
+            function getSelectedMandate() {
+                const radios = document.querySelectorAll('input.mollie-creditcard-selection');
+                for (const radio of radios) {
+                    if (radio.checked) {
+                        return radio.value;
+                    }
+                }
+                return null;
+            }
+
+            function isUsingNewCard() {
+                const val = getSelectedMandate();
+                return val === null || val === '';
+            }
+
+            function updateNewCardSectionVisibility() {
+                const section = document.getElementById('mollie-new-card-section');
+                if (section) {
+                    section.style.display = isUsingNewCard() ? '' : 'none';
+                }
+            }
+
+            function attachRadioHandlers() {
+                document.querySelectorAll('input.mollie-creditcard-selection').forEach(radio => {
+                    radio.addEventListener('change', async function () {
+                        updateNewCardSectionVisibility();
+                        if (isUsingNewCard()) {
+                            await mountCardComponent();
+                        } else {
+                            unmountCardComponent();
+                        }
+                    });
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', attachRadioHandlers);
+            window.addEventListener('magewire:update', attachRadioHandlers);
 
             hyvaCheckout.api.after(() => {
                 hyvaCheckout.payment.registerMethod({
@@ -29,44 +107,48 @@ if ($magewire->isComponentsEnabled()) {
 
                     method: {
                         initialize: async function () {
-                            if (mollie == null) {
-                                mollie = await Mollie('<?= $escaper->escapeJs($magewire->profileId) ?>', {
-                                    locale: '<?= $escaper->escapeJs($magewire->locale); ?>',
-                                    testmode: <?= $escaper->escapeJs($magewire->isTestMode ? 'true' : 'false') ?>,
-                                });
+                            updateNewCardSectionVisibility();
+                            if (isUsingNewCard()) {
+                                await mountCardComponent();
                             }
-
-                            if (cardComponent === null) {
-                                cardComponent = mollie.createComponent('card', {
-                                    styles: {
-                                        base: {
-                                            border: '1px solid #000',
-                                        },
-                                        invalid: {
-                                            color: '#dc2626',
-                                        }
-                                    }
-                                });
-                            }
-
-                            cardComponent.mount('#mollie-card-component');
                         },
 
                         uninitialize: async function () {
-                            cardComponent.unmount();
+                            unmountCardComponent();
                         },
 
-                        validate: async function() {
-                            let {token, error} = await mollie.createToken();
-                            if (error) {
-                                hyvaCheckout.payment.dispatchExceptionMessage(error.message)
+                        validate: async function () {
+                            const mandateId = getSelectedMandate();
+
+                            if (mandateId !== null && mandateId !== '') {
+                                await Magewire.find(component).setMandateId(mandateId);
+                                return true;
+                            }
+
+                            await Magewire.find(component).clearMandate();
+
+                            const checkbox = document.getElementById('mollie-save-card-checkbox');
+                            if (checkbox && checkbox.checked) {
+                                await Magewire.find(component).enableSaveCard(new Date().toISOString());
+                            } else {
+                                await Magewire.find(component).disableSaveCard();
+                            }
+
+                            if (!mollie) {
+                                hyvaCheckout.payment.dispatchExceptionMessage(
+                                    '<?= $escaper->escapeJs(__('The card form could not be loaded. Please refresh the page.')) ?>'
+                                );
                                 return false;
                             }
 
-                            const component = '<?= $escaper->escapeJs($block->getNameInLayout()) ?>';
+                            let {token, error} = await mollie.createToken();
+                            if (error) {
+                                hyvaCheckout.payment.dispatchExceptionMessage(error.message);
+                                return false;
+                            }
 
-                            await Magewire.find(component).setCardToken(token)
-                            return true
+                            await Magewire.find(component).setCardToken(token);
+                            return true;
                         }
                     }
                 });
