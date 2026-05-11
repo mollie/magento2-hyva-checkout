@@ -59,4 +59,14 @@
     <type name="Mollie\Payment\Model\Methods\CreditcardVault">
         <plugin name="mollie_hyva_change_vault_title" type="Mollie\HyvaCheckout\Plugin\Mollie\Model\Methods\ChangeVaultTitle" />
     </type>
+
+    <type name="Hyva\Checkout\Model\Form\EntityForm\GuestDetailsForm">
+        <arguments>
+            <argument name="entityFormModifiers" xsi:type="array">
+                <item name="mollie_with_email_saved_event" sortOrder="600" xsi:type="object">
+                    Mollie\HyvaCheckout\Model\Form\EntityFormModifier\GuestDetailsForm\WithEmailSavedEventModifier
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>

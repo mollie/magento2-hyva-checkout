@@ -1,0 +1,19 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+?>
+<div x-data="mollieExpressCheckout"
+     x-cloak
+     class="mb-2">
+    <div id="express-component-checkout" wire:ignore></div>
+</div>
