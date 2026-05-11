@@ -64,7 +64,7 @@ export default class VisitCheckoutPaymentCompositeAction {
   }
 
   async changeCurrencyTo(page: Page, currency: string) {
-    await page.goto('/');
+    await page.goto('./');
 
     await page.locator('.greet.welcome').first().waitFor({ state: 'visible' });
 
@@ -73,7 +73,7 @@ export default class VisitCheckoutPaymentCompositeAction {
   }
 
   async changeStoreViewTo(page: Page, name: string) {
-    await page.goto('/');
+    await page.goto('./');
 
     await page.locator('.greet.welcome').waitFor({ state: 'visible' });
 

@@ -11,7 +11,7 @@ export default class HyvaCheckout {
   }
 
   async waitForLoadersToBeHidden(page: any) {
-    await page.evaluate(() =>
+    await page.waitForFunction(() =>
       Array.from(
         document.querySelectorAll(".magewire\\.notification\\.message"),
       ).every((element) => element.offsetParent === null),
@@ -21,7 +21,8 @@ export default class HyvaCheckout {
   }
 
   async waitForLoaderWithText(page: any, text: string) {
-    await page.getByText(text).waitFor({ state: 'visible' });
+    // In Hyvä Checkout V3, actions may complete before the loader becomes visible
+    await page.getByText(text).waitFor({ state: 'visible', timeout: 3000 }).catch(() => {});
 
     await this.waitForLoadersToBeHidden(page);
   }

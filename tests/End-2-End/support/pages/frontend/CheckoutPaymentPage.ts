@@ -3,11 +3,6 @@
  * See COPYING.txt for license details.
  */
 
-import { expect } from '@playwright/test';
-import HyvaCheckout from "Pages/frontend/HyvaCheckout";
-
-const hyvaCheckout = new HyvaCheckout(expect);
-
 export default class CheckoutPaymentPage {
   orderId = null;
 
@@ -20,9 +15,11 @@ export default class CheckoutPaymentPage {
         return;
     }
 
+    const magewireSave = page.waitForResponse(
+      (response) => response.url().includes('/magewire/post') && response.status() === 200
+    );
     await input.click();
-
-    await hyvaCheckout.waitForLoaderWithText(page, 'Saving method');
+    await magewireSave;
   }
 
   async selectIssuer(page, issuer) {
