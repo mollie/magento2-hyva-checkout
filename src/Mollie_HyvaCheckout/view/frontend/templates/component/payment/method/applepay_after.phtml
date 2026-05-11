@@ -6,11 +6,11 @@
 
 /** @var Escaper $escaper */
 /** @var Template $block */
-/** @var ApplePay $magewire */
+/** @var ApplepayAfter $block */
 
 use Laminas\Escaper\Escaper;
 use Magento\Framework\View\Element\Template;
-use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay;
+use Mollie\HyvaCheckout\Block\Checkout\Payment\ApplepayAfter;
 
 ?>
 <div class="hidden">
@@ -26,34 +26,36 @@ use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay;
 
         hideApplePayWhenNotAvailable();
 
-        window.addEventListener('magewire:update', component => {
+        window.addEventListener('magewire:update', () => {
             hideApplePayWhenNotAvailable();
         });
     </script>
     <?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>
 
-    <?php if ($magewire->directIntegrationIsEnabled()): ?>
+    <?php if ($block->directIntegrationIsEnabled()): ?>
         <script>
             (() => {
                 hyvaCheckout.api.after(() => {
+                    const wire = () => {
+                        return Magewire.find('checkout.payment.method.mollie_methods_applepay');
+                    };
+
                     hyvaCheckout.payment.registerMethod({
                         code: 'mollie_methods_applepay',
 
                         method: {
                             validate: async function () {
                                 return new Promise(resolve => {
-                                    const component = Magewire.find('<?= $escaper->escapeJs($block->getNameInLayout()) ?>');
-
                                     let session;
 
                                     let request = {
-                                        countryCode: "<?php echo $escaper->escapeJs($magewire->countryId); ?>",
-                                        currencyCode: "<?php echo $escaper->escapeJs($magewire->currencyCode); ?>",
-                                        supportedNetworks: <?php echo json_encode($magewire->getSupportedNetworks()); ?>,
+                                        countryCode: "<?php echo $escaper->escapeJs($block->getCountryId()); ?>",
+                                        currencyCode: "<?php echo $escaper->escapeJs($block->getCurrencyCode()); ?>",
+                                        supportedNetworks: <?php echo json_encode($block->getSupportedNetworks()); ?>,
                                         merchantCapabilities: ['supports3DS'],
                                         total: {
-                                            label: "<?php echo $escaper->escapeJs($magewire->storeName); ?>",
-                                            amount: component.amount
+                                            label: "<?php echo $escaper->escapeJs($block->getStoreName()); ?>",
+                                            amount: wire().amount
                                         },
                                     }
 
@@ -65,13 +67,13 @@ use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay;
                                         session.completePaymentMethodSelection({
                                             label: 'Total',
                                             type: 'final',
-                                            amount: component.amount
+                                            amount: wire().amount
                                         }, []);
                                     };
 
                                     session.onpaymentauthorized = (event) => {
                                         try {
-                                            component.setApplePayPaymentToken(JSON.stringify(event.payment.token)).then(() => {
+                                            wire().setApplePayPaymentToken(JSON.stringify(event.payment.token)).then(() => {
                                                 resolve(true);
                                             });
                                         } catch {
@@ -82,7 +84,7 @@ use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay;
 
                                     session.onvalidatemerchant = (event) => {
                                         window.fetch(
-                                            "<?php echo $magewire->getApplePayValidationUrl(); ?>",
+                                            "<?php echo $block->getApplePayValidationUrl(); ?>",
                                             {
                                                 method: 'POST',
                                                 mode: 'cors',
