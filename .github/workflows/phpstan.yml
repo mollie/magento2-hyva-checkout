@@ -2,7 +2,22 @@ name: phpstan
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
+    secrets-gate:
+        # Fork PRs do not receive secrets, so skip the build when the key is missing
+        runs-on: ubuntu-latest
+        outputs:
+            is-secret-set: ${{ steps.is-secret-set.outputs.is_hyva_ssh_private_key_set }}
+        steps:
+            - id: is-secret-set
+              env:
+                  HYVA_SSH_PRIVATE_KEY: ${{ secrets.HYVA_SSH_PRIVATE_KEY }}
+              if: "${{ env.HYVA_SSH_PRIVATE_KEY != '' }}"
+              run: echo "is_hyva_ssh_private_key_set=true" >> $GITHUB_OUTPUT
+
     build:
+        needs:
+            - secrets-gate
+        if: needs.secrets-gate.outputs.is-secret-set == 'true'
         strategy:
             matrix:
                 include:
