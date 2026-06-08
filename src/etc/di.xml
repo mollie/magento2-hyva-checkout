@@ -27,4 +27,10 @@
             <argument name="method" xsi:type="string">giftcard</argument>
         </arguments>
     </virtualType>
+
+    <type name="Mollie\HyvaCheckout\Block\Checkout\Payment\ApplepayAfter">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
 </config>

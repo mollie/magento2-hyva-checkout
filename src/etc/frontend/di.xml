@@ -65,4 +65,10 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- Replace hash-based checkout URLs with Hyva Checkout step URLs for failed payment redirects -->
+    <type name="Mollie\Payment\Service\Order\RedirectOnError">
+        <plugin name="mollie_hyva_checkout_redirect_on_error"
+                type="Mollie\HyvaCheckout\Plugin\Mollie\Service\Order\RedirectOnErrorPlugin"/>
+    </type>
 </config>
