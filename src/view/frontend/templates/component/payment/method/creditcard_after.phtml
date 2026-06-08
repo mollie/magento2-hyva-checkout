@@ -3,18 +3,19 @@
  * Copyright Magmodules.eu. All rights reserved.
  * See COPYING.txt for license details.
  */
-?>
-<div>
-<?php
-/** @var Escaper $escaper */
-/** @var Template $block */
-/** @var Creditcard $magewire */
 
 use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard;
 
+/** @var Escaper $escaper */
+/** @var Template $block */
+/** @var Creditcard $magewire */
+
 $magewire = $block->getMagewire();
+?>
+<div>
+<?php
 
 if ($magewire->isComponentsEnabled()) {
     ?>

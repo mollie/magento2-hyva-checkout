@@ -9,14 +9,14 @@ namespace Mollie\HyvaCheckout\Observer\HyvaConfigGenerateBefore;
 use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Filesystem\DirectoryList;
 
 class RegisterModuleForHyvaConfig implements ObserverInterface
 {
-    private ComponentRegistrar $componentRegistrar;
-
-    public function __construct(ComponentRegistrar $componentRegistrar)
-    {
-        $this->componentRegistrar = $componentRegistrar;
+    public function __construct(
+        private readonly ComponentRegistrar $componentRegistrar,
+        private readonly DirectoryList $directoryList
+    ) {
     }
 
     public function execute(Observer $observer)
@@ -27,7 +27,7 @@ class RegisterModuleForHyvaConfig implements ObserverInterface
         $path = $this->componentRegistrar->getPath(ComponentRegistrar::MODULE, 'Mollie_HyvaCheckout');
 
         // Only use the path relative to the Magento base dir
-        $extensions[] = ['src' => substr($path, strlen(BP) + 1)];
+        $extensions[] = ['src' => substr($path, strlen($this->directoryList->getRoot()) + 1)];
 
         $config->setData('extensions', $extensions);
     }
