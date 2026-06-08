@@ -32,8 +32,11 @@ composer require hyva-themes/magento2-default-theme-csp hyva-themes/magento2-hyv
 
 bin/magento setup:upgrade --keep-generated
 
-magerun2 config:store:set design/theme/theme_id 3 --scope=default --scope-id=0
-magerun2 config:store:set design/theme/theme_id 5 --scope=stores --scope-id=1
+# Activate the Hyvä Default CSP theme. The numeric theme_id shifts between Hyvä
+# releases, so resolve it by code instead of hardcoding a magic number.
+csp_theme_id=$(magerun2 --no-ansi db:query "SELECT theme_id FROM theme WHERE area = 'frontend' AND code = 'Hyva/default-csp' LIMIT 1" 2>/dev/null | grep -xE '[0-9]+' | head -n1)
+magerun2 config:store:set design/theme/theme_id "$csp_theme_id" --scope=default --scope-id=0
+magerun2 config:store:set design/theme/theme_id "$csp_theme_id" --scope=stores --scope-id=1
 
 # Enable CSP
 magerun2 config:store:set system/default/csp/policies/storefront/scripts/inline 0

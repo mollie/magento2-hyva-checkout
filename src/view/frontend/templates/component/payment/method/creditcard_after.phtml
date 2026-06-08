@@ -5,34 +5,30 @@
  */
 
 use Magento\Framework\Escaper;
-use Magento\Framework\View\Element\Template;
-use Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard;
+use Mollie\HyvaCheckout\Block\Checkout\Payment\CreditcardAfter;
 
 /** @var Escaper $escaper */
-/** @var Template $block */
-/** @var Creditcard $magewire */
-
-$magewire = $block->getMagewire();
+/** @var CreditcardAfter $block */
 ?>
 <div>
 <?php
 
-if ($magewire->isComponentsEnabled()) {
+if ($block->isComponentsEnabled()) {
     ?>
     <script>
         (() => {
             let mollie = null;
             let cardComponent = null;
             let isMounted = false;
-            const component = '<?= $escaper->escapeJs($block->getNameInLayout()) ?>';
+            const component = 'checkout.payment.method.mollie_methods_creditcard';
 
             async function initMollie() {
                 if (mollie !== null) {
                     return;
                 }
-                mollie = await Mollie('<?= $escaper->escapeJs($magewire->profileId) ?>', {
-                    locale: '<?= $escaper->escapeJs($magewire->locale) ?>',
-                    testMode: <?= $magewire->isTestMode ? 'true' : 'false' ?>,
+                mollie = await Mollie('<?= $escaper->escapeJs($block->getProfileId()) ?>', {
+                    locale: '<?= $escaper->escapeJs($block->getLocale()) ?>',
+                    testMode: <?= $block->isTestMode() ? 'true' : 'false' ?>,
                 });
             }
 
