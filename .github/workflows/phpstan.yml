@@ -9,7 +9,7 @@ jobs:
                     - PHP_VERSION: php82-fpm
                       MAGENTO_VERSION: 2.4.7-p8
                     - PHP_VERSION: php84-fpm
-                      MAGENTO_VERSION: 2.4.8-p3
+                      MAGENTO_VERSION: 2.4.9
 
         name: PHP ${{ matrix.PHP_VERSION }} Magento ${{ matrix.MAGENTO_VERSION }}
 
