@@ -51,7 +51,7 @@ use Mollie\HyvaCheckout\Block\Checkout\Payment\ApplepayAfter;
                                     let request = {
                                         countryCode: "<?php echo $escaper->escapeJs($block->getCountryId()); ?>",
                                         currencyCode: "<?php echo $escaper->escapeJs($block->getCurrencyCode()); ?>",
-                                        supportedNetworks: <?php echo json_encode($block->getSupportedNetworks()); ?>,
+                                        supportedNetworks: [<?php foreach ($block->getSupportedNetworks() as $network): ?>"<?php echo $escaper->escapeJs($network); ?>",<?php endforeach; ?>],
                                         merchantCapabilities: ['supports3DS'],
                                         total: {
                                             label: "<?php echo $escaper->escapeJs($block->getStoreName()); ?>",
