@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Hyva\CompatModuleFallback\Model\CompatModuleRegistry">
+        <arguments>
+            <argument name="compatModules" xsi:type="array">
+                <item name="hyva-checkout-magento2-mollie" xsi:type="array">
+                    <item name="original_module" xsi:type="string">Mollie_Payment</item>
+                    <item name="compat_module" xsi:type="string">Mollie_HyvaCheckout</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Hyva\Checkout\Model\Magewire\Payment\PlaceOrderServiceProvider">
+        <arguments>
+            <argument name="placeOrderServiceList" xsi:type="array">
+                <item name="mollie" xsi:type="object">Mollie\HyvaCheckout\Service\PlaceOrderService</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <!-- Configure the icon library path prefix for the Hyva Checkout SVG icon renderer -->
+    <type name="Hyva\Theme\ViewModel\SvgIcons">
+        <arguments>
+            <argument name="pathPrefixMapping" xsi:type="array">
+                <item name="mollie_payments" xsi:type="string">Mollie_Payment::images/methods</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Mollie\HyvaCheckout\Plugin\PopulateIconData">
+        <arguments>
+            <!-- Change the iconLibraryPathPrefix to use a different icon library -->
+            <argument name="iconLibraryPathPrefix" xsi:type="string">mollie_payments</argument>
+        </arguments>
+    </type>
+
+    <!-- Icon renderer plugins -->
+    <type name="Hyva\Checkout\Model\MethodMetaData">
+        <plugin sortOrder="1" name="mollie_hyva_checkout_set_can_render_icon"
+                type="Mollie\HyvaCheckout\Plugin\RenderPaymentMethodIcons"/>
+    </type>
+    <type name="Hyva\Checkout\Model\MethodMetaDataInterface">
+        <plugin sortOrder="1" name="mollie_hyva_checkout_popuplate_icon_data"
+                type="Mollie\HyvaCheckout\Plugin\PopulateIconData"/>
+    </type>
+
+    <type name="Hyva\Checkout\Model\Form\EntityForm\GuestDetailsForm">
+        <arguments>
+            <argument name="entityFormModifiers" xsi:type="array">
+                <item name="mollie_with_email_saved_event" sortOrder="600" xsi:type="object">
+                    Mollie\HyvaCheckout\Model\Form\EntityFormModifier\GuestDetailsForm\WithEmailSavedEventModifier
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Replace hash-based checkout URLs with Hyva Checkout step URLs for failed payment redirects -->
+    <type name="Mollie\Payment\Service\Order\RedirectOnError">
+        <plugin name="mollie_hyva_checkout_redirect_on_error"
+                type="Mollie\HyvaCheckout\Plugin\Mollie\Service\Order\RedirectOnErrorPlugin"/>
+    </type>
+</config>

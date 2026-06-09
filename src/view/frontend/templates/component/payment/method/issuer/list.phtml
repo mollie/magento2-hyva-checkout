@@ -1,0 +1,28 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<div>
+    <ul class="ml-4 mollie-issuer-list">
+        <?php
+        /** @var \Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithIssuer $block */
+        $magewire = $block->getMagewire();
+
+        foreach ($magewire->issuers as $issuer) {
+            echo '
+                <li class="my-1 mollie-issuer">
+                   <label>
+                       <input type="radio" name="selectedIssuer" wire:model="selectedIssuer" value="' . $escaper->escapeHtmlAttr($issuer['id']) . '">
+                       <img class="mx-2 inline" src="' . $escaper->escapeUrl($issuer['image']['svg']) . '" alt="' . $escaper->escapeHtmlAttr($issuer['name']) . '">
+                       ' . $escaper->escapeHtml($issuer['name']) . '
+                   </label>
+               </li>
+           ';
+        }
+        ?>
+    </ul>
+</div>

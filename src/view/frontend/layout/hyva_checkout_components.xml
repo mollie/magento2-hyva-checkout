@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <body>
+        <referenceContainer name="checkout.payment.methods.before">
+            <block name="checkout.payment.method.mollie_methods_expresscomponents"
+                   template="Mollie_HyvaCheckout::component/payment/method/express_components.phtml"
+                   ifconfig="payment/mollie_methods_expresscomponents/active"
+            />
+        </referenceContainer>
+
+        <referenceBlock name="checkout.payment.methods">
+            <block name="checkout.payment.method.mollie_methods_applepay"
+                   as="mollie_methods_applepay"
+                   template="Mollie_HyvaCheckout::component/payment/method/applepay.phtml"
+            >
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\ApplePay
+                    </argument>
+                </arguments>
+            </block>
+
+            <block name="checkout.payment.method.mollie_methods_creditcard"
+                   as="mollie_methods_creditcard"
+                   class="Mollie\HyvaCheckout\Block\Checkout\Payment\Creditcard"
+                   template="Mollie_HyvaCheckout::component/payment/method/creditcard.phtml"
+            >
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Creditcard
+                    </argument>
+                </arguments>
+            </block>
+
+            <block name="checkout.payment.method.mollie_methods_kbc"
+                   as="mollie_methods_kbc"
+                   class="Mollie\HyvaCheckout\Block\Checkout\Payment\Issuer"
+            >
+                <arguments>
+                    <argument name="mollie_method" xsi:type="string">mollie_methods_kbc</argument>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Kbc
+                    </argument>
+                </arguments>
+            </block>
+
+            <block name="checkout.payment.method.mollie_methods_giftcard"
+                   as="mollie_methods_giftcard"
+                   class="Mollie\HyvaCheckout\Block\Checkout\Payment\Issuer"
+            >
+                <arguments>
+                    <argument name="mollie_method" xsi:type="string">mollie_methods_giftcard</argument>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Giftcard
+                    </argument>
+                </arguments>
+            </block>
+
+            <block name="checkout.payment.method.mollie_methods_pointofsale"
+                   as="mollie_methods_pointofsale"
+                   template="Mollie_HyvaCheckout::component/payment/method/pointofsale.phtml"
+            >
+                <arguments>
+                    <argument name="mollie_method" xsi:type="string">mollie_methods_pointofsale</argument>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithTerminal
+                    </argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+
+        <referenceContainer name="price-summary.total-segments">
+            <block name="price-summary.total-segment.mollie_payment_fee"
+                   as="mollie_payment_fee"
+                   template="Mollie_HyvaCheckout::checkout/price-summary/total-segments/mollie_payment_fee.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

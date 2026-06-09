@@ -40,7 +40,7 @@ test.describe('Check that extra validations for Billie are working as expected',
 
 test.describe('Check that Billie behaves as expected', () => {
     const testCases = [
-        {status: 'authorized', orderStatus: 'Processing', title: '[C4228956] Validate the submission of an order with Billie as payment method and payment mark as "Authorized"'},
+        {status: 'paid', orderStatus: 'Processing', title: '[C4228956] Validate the submission of an order with Billie as payment method and payment mark as "Paid"'},
         {status: 'failed', orderStatus: 'Canceled', title: '[C4228957] Validate the submission of an order with Billie as payment method and payment mark as "Failed"'},
         {status: 'expired', orderStatus: 'Canceled', title: '[C4228958] Validate the submission of an order with Billie as payment method and payment mark as "Expired"'},
         {status: 'canceled', orderStatus: 'Canceled', title: '[C4228959] Validate the submission of an order with Billie as payment method and payment mark as "Cancelled"'},

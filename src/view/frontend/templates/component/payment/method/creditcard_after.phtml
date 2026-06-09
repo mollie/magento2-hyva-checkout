@@ -1,0 +1,159 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\Escaper;
+use Mollie\HyvaCheckout\Block\Checkout\Payment\CreditcardAfter;
+
+/** @var Escaper $escaper */
+/** @var CreditcardAfter $block */
+?>
+<div>
+<?php
+
+if ($block->isComponentsEnabled()) {
+    ?>
+    <script>
+        (() => {
+            let mollie = null;
+            let cardComponent = null;
+            let isMounted = false;
+            const component = 'checkout.payment.method.mollie_methods_creditcard';
+
+            async function initMollie() {
+                if (mollie !== null) {
+                    return;
+                }
+                mollie = await Mollie('<?= $escaper->escapeJs($block->getProfileId()) ?>', {
+                    locale: '<?= $escaper->escapeJs($block->getLocale()) ?>',
+                    testMode: <?= $block->isTestMode() ? 'true' : 'false' ?>,
+                });
+            }
+
+            async function mountCardComponent() {
+                if (isMounted) {
+                    return;
+                }
+                await initMollie();
+                if (cardComponent === null) {
+                    cardComponent = mollie.createComponent('card', {
+                        styles: {
+                            base: {
+                                border: '1px solid #000',
+                            },
+                            invalid: {
+                                color: '#dc2626',
+                            }
+                        }
+                    });
+                }
+                cardComponent.mount('#mollie-card-component');
+                isMounted = true;
+            }
+
+            function unmountCardComponent() {
+                if (isMounted && cardComponent) {
+                    cardComponent.unmount();
+                    isMounted = false;
+                }
+            }
+
+            function getSelectedMandate() {
+                const radios = document.querySelectorAll('input.mollie-creditcard-selection');
+                for (const radio of radios) {
+                    if (radio.checked) {
+                        return radio.value;
+                    }
+                }
+                return null;
+            }
+
+            function isUsingNewCard() {
+                const val = getSelectedMandate();
+                return val === null || val === '';
+            }
+
+            function updateNewCardSectionVisibility() {
+                const section = document.getElementById('mollie-new-card-section');
+                if (section) {
+                    section.style.display = isUsingNewCard() ? '' : 'none';
+                }
+            }
+
+            function attachRadioHandlers() {
+                document.querySelectorAll('input.mollie-creditcard-selection').forEach(radio => {
+                    radio.addEventListener('change', async function () {
+                        updateNewCardSectionVisibility();
+                        if (isUsingNewCard()) {
+                            await mountCardComponent();
+                        } else {
+                            unmountCardComponent();
+                        }
+                    });
+                });
+            }
+
+            document.addEventListener('DOMContentLoaded', attachRadioHandlers);
+            window.addEventListener('magewire:update', attachRadioHandlers);
+
+            hyvaCheckout.api.after(() => {
+                hyvaCheckout.payment.registerMethod({
+                    code: 'mollie_methods_creditcard',
+
+                    method: {
+                        initialize: async function () {
+                            updateNewCardSectionVisibility();
+                            if (isUsingNewCard()) {
+                                await mountCardComponent();
+                            }
+                        },
+
+                        uninitialize: async function () {
+                            unmountCardComponent();
+                        },
+
+                        validate: async function () {
+                            const mandateId = getSelectedMandate();
+
+                            if (mandateId !== null && mandateId !== '') {
+                                await Magewire.find(component).setMandateId(mandateId);
+                                return true;
+                            }
+
+                            await Magewire.find(component).clearMandate();
+
+                            const checkbox = document.getElementById('mollie-save-card-checkbox');
+                            if (checkbox && checkbox.checked) {
+                                await Magewire.find(component).enableSaveCard(new Date().toISOString());
+                            } else {
+                                await Magewire.find(component).disableSaveCard();
+                            }
+
+                            if (!mollie) {
+                                hyvaCheckout.payment.dispatchExceptionMessage(
+                                    '<?= $escaper->escapeJs(__('The card form could not be loaded. Please refresh the page.')) ?>'
+                                );
+                                return false;
+                            }
+
+                            let {token, error} = await mollie.createToken();
+                            if (error) {
+                                hyvaCheckout.payment.dispatchExceptionMessage(error.message);
+                                return false;
+                            }
+
+                            await Magewire.find(component).setCardToken(token);
+                            return true;
+                        }
+                    }
+                });
+            });
+        })();
+    </script>
+    <?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>
+    <?php
+}
+?>
+</div>

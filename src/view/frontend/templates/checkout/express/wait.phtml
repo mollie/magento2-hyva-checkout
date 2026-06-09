@@ -1,0 +1,75 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Mollie\HyvaCheckout\Magewire\Express\WaitPage;
+
+/** @var Escaper $escaper */
+/** @var WaitPage $magewire */
+/** @var Template $block */
+?>
+
+<div x-data="mollieExpressWait()">
+    <div x-show="status !== 'error'" id="mollie-order-status">
+        <span x-text="currentStatus"></span>
+    </div>
+    <div x-show="status === 'error'" id="mollie-order-error" style="display: none;">
+        <span x-text="currentStatus"></span>
+    </div>
+</div>
+
+<script>
+    function mollieExpressWait() {
+        return {
+            status: '<?= $escaper->escapeJs($magewire->status) ?>',
+            currentStatus: '<?= $escaper->escapeJs($magewire->currentStatus) ?>',
+            redirectToCartUrl: '<?= $escaper->escapeJs($magewire->redirectToCartUrl) ?>',
+            token: '<?= $escaper->escapeJs($block->getRequest()->getParam('paymentToken')) ?>',
+            waitTime: 100,
+
+            init() {
+                window.dispatchEvent(new CustomEvent('reload-customer-section-data'));
+
+                this.wire().token = this.token;
+
+                // Hard 60-second fallback: redirect to cart if order never appears
+                setTimeout(() => {
+                    window.location = this.redirectToCartUrl;
+                }, 60000);
+
+                this.scheduleNextPoll();
+            },
+
+            scheduleNextPoll() {
+                if (this.waitTime < 1000) {
+                    this.waitTime += 100;
+                }
+                setTimeout(() => this.poll(), this.waitTime);
+            },
+
+            async poll() {
+                await this.$wire.call('pollStatus');
+                this.status = this.$wire.get('status');
+                this.currentStatus = this.$wire.get('currentStatus');
+
+                // 'processing' → Magewire triggers server-side redirect automatically
+                // 'canceled' → stop polling, show final status
+                // anything else → keep polling with backoff
+                if (this.status !== 'processing' && this.status !== 'canceled') {
+                    this.scheduleNextPoll();
+                }
+            },
+
+            wire() {
+                return Magewire.find('<?= $escaper->escapeJs($block->getNameInLayout()) ?>');
+            }
+        }
+    }
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

@@ -1,0 +1,60 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Escaper $escaper */
+/** @var Template $block */
+?>
+
+<script>
+    function mollieExpressCheckout() {
+        function wire() {
+            return Magewire.find('<?= $escaper->escapeJs($block->getNameInLayout()) ?>');
+        }
+
+        return {
+            isReady: wire().entangle('isReady'),
+
+            init() {
+                if (this.isReady) {
+                    this.render();
+                }
+
+                this.$watch('isReady', (isReady) => {
+                    if (isReady) {
+                        this.render();
+                    }
+                })
+            },
+
+            render() {
+                wire().createCheckoutSession().then(() => {
+                    this.renderComponent();
+                })
+            },
+
+            renderComponent() {
+                const checkout = Mollie2.Checkout(wire().clientAccessToken);
+                const component = checkout.create('express-checkout', {
+                    paymentMethods: {
+                        idealcheckout: 'never',
+                        applepay: 'auto',
+                        googlepay: 'auto',
+                    }
+                });
+
+                component.mount(document.getElementById('express-component-checkout'));
+            },
+        }
+    }
+
+    window.addEventListener('alpine:init', () => Alpine.data('mollieExpressCheckout', mollieExpressCheckout), {once: true});
+</script>
+<?php isset($hyvaCsp) && $hyvaCsp->registerInlineScript() ?>

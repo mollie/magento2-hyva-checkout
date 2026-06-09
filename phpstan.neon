@@ -1,0 +1,14 @@
+parameters:
+    level: 2
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - '#^Call to an undefined method .*Interface::.*\(\)\.$#'
+        - '#Method Magento\\Sales\\Api\\Data\\OrderPaymentInterface::setAdditionalInformation\(\) invoked with 2 parameters, 1 required.#'
+        - '#Method Magento\\Sales\\Api\\Data\\OrderPaymentInterface::getAdditionalInformation\(\) invoked with 1 parameter, 0 required.#'
+        - '#Method Magento\\Quote\\Api\\Data\\PaymentInterface::setAdditionalInformation\(\) invoked with 2 parameters, 1 required.#'
+        - '#Method Magento\\Quote\\Api\\Data\\PaymentInterface::getAdditionalInformation\(\) invoked with 1 parameter, 0 required.#'
+    fileExtensions:
+        - php
+        - phtml
+    excludePaths:
+        - Test/*

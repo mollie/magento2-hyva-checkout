@@ -3,7 +3,7 @@
  * See COPYING.txt for license details.
  */
 
-import { Page } from '@playwright/test';
+import {Page} from '@playwright/test';
 
 export default class ProductPage {
     /**
@@ -11,7 +11,7 @@ export default class ProductPage {
      * @param {string} productId
      */
     async openProduct(page: Page, productId: int) {
-        await page.goto(`/catalog/product/view/id/${productId}`);
+        await page.goto(`catalog/product/view/id/${productId}`);
     }
 
     async addSimpleProductToCart(page: Page, quantity = 1) {

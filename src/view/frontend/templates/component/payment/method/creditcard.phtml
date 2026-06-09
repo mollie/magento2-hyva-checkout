@@ -1,0 +1,77 @@
+<?php
+/*
+ * Copyright Magmodules.eu. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\Escaper;
+use Mollie\HyvaCheckout\Block\Checkout\Payment\Creditcard;
+
+/** @var Creditcard $block */
+/** @var Escaper $escaper */
+
+$savedMandates = $block->getSavedMandates();
+$hasMandates = $savedMandates !== [];
+$showConsentCheckbox = $block->isSavedCardsEnabled()
+    && $block->isCustomerLoggedIn()
+    && $block->isComponentsEnabled();
+?>
+
+<?php if ($hasMandates): ?>
+    <ul class="mollie-saved-cards-list">
+        <?php foreach ($savedMandates as $mandate): ?>
+            <li>
+                <label>
+                    <input type="radio"
+                           name="mollie_creditcard_selection"
+                           class="mollie-creditcard-selection"
+                           value="<?= $escaper->escapeHtmlAttr($mandate['mandate_id']) ?>"
+                    />
+                    <?php $logoUrl = $block->getCardLogoUrl($mandate['card_label']); ?>
+                    <?php if ($logoUrl): ?>
+                        <img class="inline-block"
+                             src="<?= $escaper->escapeUrl($logoUrl) ?>"
+                             alt="<?= $escaper->escapeHtmlAttr($mandate['card_label']) ?>"
+                             width="38" height="24"
+                        />
+                    <?php endif ?>
+                    <?= $escaper->escapeHtml($mandate['card_label']) ?>
+                    <?= $escaper->escapeHtml(__('Card ending in %1', $mandate['card_number_last4'])) ?>
+                    <?php if (($mandate['card_expiry_date'] ?? '') !== ''): ?>
+                        (<?= $escaper->escapeHtml(__('expires %1', $mandate['card_expiry_date'])) ?>)
+                    <?php endif ?>
+                </label>
+            </li>
+        <?php endforeach ?>
+
+        <?php if ($block->isComponentsEnabled()): ?>
+            <li>
+                <label>
+                    <input type="radio"
+                           name="mollie_creditcard_selection"
+                           class="mollie-creditcard-selection"
+                           value=""
+                           checked
+                    />
+                    <?= $escaper->escapeHtml(__('Use a new card')) ?>
+                </label>
+            </li>
+        <?php endif ?>
+    </ul>
+<?php endif ?>
+
+<?php if ($block->isComponentsEnabled()): ?>
+    <div id="mollie-new-card-section"<?= $hasMandates ? ' style="display:none"' : '' ?>>
+        <form>
+            <div id="mollie-card-component" wire:ignore></div>
+        </form>
+        <?php if ($showConsentCheckbox): ?>
+            <div class="mt-3 flex items-start gap-2 rounded border border-gray-200 bg-gray-50 p-3 text-sm text-gray-600">
+                <input type="checkbox" id="mollie-save-card-checkbox" class="mt-0.5 shrink-0 cursor-pointer" />
+                <label for="mollie-save-card-checkbox" class="cursor-pointer">
+                    <?= /* @noEscape */ $block->getConsentText() ?>
+                </label>
+            </div>
+        <?php endif ?>
+    </div>
+<?php endif ?>

@@ -15,7 +15,7 @@ test('[C4251741] Can add multiple products to the cart', async ({ page }) => {
     await productPage.openProduct(page, 5);
     const product2Name = await productPage.addSimpleProductToCart(page, 1);
 
-    await page.goto('/checkout/cart');
+    await page.goto('checkout/cart');
 
     await expect(page.locator('#shopping-cart-table .cart.item')).toHaveCount(2);
 

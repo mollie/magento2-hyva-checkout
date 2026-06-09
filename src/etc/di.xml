@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright Magmodules.eu. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Mollie\HyvaCheckout\Block\Checkout\Payment\Creditcard">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Kbc"
+                 type="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithIssuer"
+    >
+        <arguments>
+            <argument name="method" xsi:type="string">kbc</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\Giftcard"
+                 type="Mollie\HyvaCheckout\Magewire\Checkout\Payment\Method\WithIssuer"
+    >
+        <arguments>
+            <argument name="method" xsi:type="string">giftcard</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Mollie\HyvaCheckout\Block\Checkout\Payment\ApplepayAfter">
+        <arguments>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+</config>
