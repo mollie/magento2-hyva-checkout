@@ -8,15 +8,29 @@ declare(strict_types=1);
 
 namespace Mollie\HyvaCheckout\Test\Fakes\Quote\Api;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Api\PaymentMethodManagementInterface;
 
 class PaymentMethodManagementFake implements PaymentMethodManagementInterface
 {
+    /**
+     * @var list<string|null>
+     */
     private array $methodsThatWereSet = [];
+    private bool $shouldFailOnSet = false;
+
+    public function givenSetFails(): void
+    {
+        $this->shouldFailOnSet = true;
+    }
 
     public function set($cartId, PaymentInterface $method): int
     {
+        if ($this->shouldFailOnSet) {
+            throw new LocalizedException(__('The requested Payment Method is not available.'));
+        }
+
         $this->methodsThatWereSet[] = $method->getMethod();
 
         return count($this->methodsThatWereSet);
@@ -32,17 +46,11 @@ class PaymentMethodManagementFake implements PaymentMethodManagementInterface
         return [];
     }
 
-    public function getNumberOfTimesSetWasCalled(): int
+    /**
+     * @return list<string|null>
+     */
+    public function getMethodsThatWereSet(): array
     {
-        return count($this->methodsThatWereSet);
-    }
-
-    public function getLastMethodThatWasSet(): ?string
-    {
-        if ($this->methodsThatWereSet === []) {
-            return null;
-        }
-
-        return end($this->methodsThatWereSet);
+        return $this->methodsThatWereSet;
     }
 }

@@ -16,11 +16,6 @@ parameters:
         -
             message: '#Binary operation "\." between .* and array\|string results in an error\.#'
             path: src/view/*
-        # Magento annotates its DataObject-backed getters as "@return string", but Quote\Payment::getMethod()
-        # and Address::getCountryId() both read unset data and return null until a value is written.
-        -
-            identifier: notIdentical.alwaysTrue
-            path: src/Observer/SalesQuoteCollectTotalsBefore/SetDefaultSelectedPaymentMethod.php
     fileExtensions:
         - php
         - phtml

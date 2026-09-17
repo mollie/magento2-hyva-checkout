@@ -12,114 +12,73 @@ use Hyva\Checkout\Model\CheckoutInformation\Luma;
 use Hyva\Checkout\Model\ConfigData\HyvaThemes\SystemConfigGeneral as HyvaCheckoutConfig;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\Exception\State\InvalidTransitionException;
-use Magento\Payment\Api\Data\PaymentMethodInterface;
-use Magento\Payment\Api\PaymentMethodListInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Api\PaymentMethodManagementInterface;
 use Magento\Quote\Model\Quote;
+use Mollie\HyvaCheckout\Service\Quote\AvailablePaymentMethodsInterface;
 use Mollie\Payment\Config;
+use Mollie\Payment\Logger\MollieLogger;
 
 class SetDefaultSelectedPaymentMethod implements ObserverInterface
 {
-    private Config $config;
-    private HyvaCheckoutConfig $hyvaCheckoutConfig;
-    private PaymentMethodManagementInterface $paymentMethodManagement;
-    private PaymentMethodListInterface $paymentMethodList;
+    public const FIRST_MOLLIE_METHOD = 'first_mollie_method';
 
-    /**
-     * @var array<int, array<PaymentMethodInterface>>
-     */
-    private array $methodList = [];
+    private const MOLLIE_METHOD_PREFIX = 'mollie_';
+    private const METHODS_EXCLUDED_FROM_PRESELECTION = ['mollie_methods_applepay'];
+
     private bool $isSettingPaymentMethod = false;
 
     public function __construct(
-        HyvaCheckoutConfig $hyvaCheckoutConfig,
-        Config $config,
-        PaymentMethodManagementInterface $paymentMethodManagement,
-        PaymentMethodListInterface $paymentMethodList
+        private readonly HyvaCheckoutConfig $hyvaCheckoutConfig,
+        private readonly Config $config,
+        private readonly PaymentMethodManagementInterface $paymentMethodManagement,
+        private readonly AvailablePaymentMethodsInterface $availablePaymentMethods,
+        private readonly MollieLogger $logger
     ) {
-        $this->config = $config;
-        $this->hyvaCheckoutConfig = $hyvaCheckoutConfig;
-        $this->paymentMethodManagement = $paymentMethodManagement;
-        $this->paymentMethodList = $paymentMethodList;
     }
 
     public function execute(Observer $observer): void
     {
-        /** @var Quote $quote */
-        $quote = $observer->getData('quote');
-
-        // Setting the payment method reloads and saves the quote, which collects the totals again.
-        // Without this guard that re-enters this observer until the memory limit is reached.
         if ($this->isSettingPaymentMethod) {
             return;
         }
 
-        $storeId = storeId($quote->getStoreId());
-        if (!$this->config->isModuleEnabled($storeId)) {
+        /** @var Quote $quote */
+        $quote = $observer->getData('quote');
+        $quoteId = $this->getQuoteId($quote);
+        if ($quoteId === null || !$this->canPreselectFor($quote)) {
             return;
         }
 
-        // Don't override if the quote isn't available yet or if a payment method is already set.
-        $quoteId = $quote->getId();
-        if (!is_numeric($quoteId) ||
-            !$this->config->getApiKey($storeId) ||
-            $this->quoteHasActivePaymentMethod($quote)) {
+        $availableMethods = $this->availablePaymentMethods->getCodes($quote);
+        if ($this->hasAvailablePaymentMethod($quote, $availableMethods)) {
             return;
         }
 
-        $defaultMethod = $this->config->getDefaultSelectedMethod();
-        if (!$defaultMethod) {
+        $method = $this->getDefaultMethod(storeId($quote->getStoreId()), $availableMethods);
+        if ($method === null) {
             return;
         }
 
-        if ($defaultMethod == 'first_mollie_method') {
-            $defaultMethod = $this->getFirstAvailableMollieMethod($storeId);
-        }
-
-        if (!$defaultMethod || !$this->isMethodActive($defaultMethod, $storeId)) {
-            return;
-        }
-
-        // Skip setting default payment method if Luma checkout is enabled in Hyvä Checkout config
-        if (!$this->isHyvaCheckoutActive()) {
-            return;
-        }
-
-        $payment = $quote->getPayment();
-        $payment->setMethod($defaultMethod);
-
-        $quote->setPayment($payment);
-
-        if (!$this->quoteCanAcceptPaymentMethod($quote)) {
-            return;
-        }
-
-        $this->isSettingPaymentMethod = true;
-        try {
-            $this->paymentMethodManagement->set((int)$quoteId, $payment);
-        } catch (InvalidTransitionException $exception) {
-            // We are not able to set the payment method. Probably the address is not set yet.
-        } finally {
-            $this->isSettingPaymentMethod = false;
-        }
+        $this->setPaymentMethod($quote, $quoteId, $method);
     }
 
-    /**
-     * Check if that method is enabled for the current store
-     */
-    private function isMethodActive(string $methodCode, ?int $storeId): bool
+    private function getQuoteId(Quote $quote): ?int
     {
-        $methods = $this->getMethodList($storeId);
+        $quoteId = $quote->getId();
 
-        /** @var PaymentMethodInterface $method */
-        foreach ($methods as $method) {
-            if ($method->getCode() === $methodCode) {
-                return $method->getIsActive();
-            }
-        }
+        return is_numeric($quoteId) ? (int)$quoteId : null;
+    }
 
-        return false;
+    private function canPreselectFor(Quote $quote): bool
+    {
+        $storeId = storeId($quote->getStoreId());
+
+        return $this->config->isModuleEnabled($storeId)
+            && $this->config->getApiKey($storeId) !== ''
+            && $this->config->getDefaultSelectedMethod($storeId) !== ''
+            && $this->isHyvaCheckoutActive()
+            && $this->quoteCanAcceptPaymentMethod($quote);
     }
 
     private function isHyvaCheckoutActive(): bool
@@ -127,49 +86,69 @@ class SetDefaultSelectedPaymentMethod implements ObserverInterface
         return $this->hyvaCheckoutConfig->getCheckout() !== Luma::NAMESPACE;
     }
 
-    private function quoteHasActivePaymentMethod(Quote $quote): bool
-    {
-        return $quote->getPayment()->getMethod() !== null;
-    }
-
-    /**
-     * A quote without a shipping country is rejected by PaymentMethodManagement::set()
-     */
     private function quoteCanAcceptPaymentMethod(Quote $quote): bool
     {
         if ($quote->isVirtual()) {
             return true;
         }
 
-        return $quote->getShippingAddress()->getCountryId() !== null;
-    }
-
-    private function getFirstAvailableMollieMethod(?int $storeId): ?string
-    {
-        $methods = $this->getMethodList($storeId);
-
-        foreach ($methods as $method) {
-            $methodCode = $method->getCode();
-            if (strpos($methodCode, 'mollie_') === 0 &&
-                $methodCode != 'mollie_methods_applepay' &&
-                $this->isMethodActive($methodCode, $storeId)
-            ) {
-                return $methodCode;
-            }
-        }
-
-        return null;
+        return (string)$quote->getShippingAddress()->getCountryId() !== '';
     }
 
     /**
-     * @return array<PaymentMethodInterface>
+     * @param list<string> $availableMethods
      */
-    private function getMethodList(?int $storeId): array
+    private function hasAvailablePaymentMethod(Quote $quote, array $availableMethods): bool
     {
-        if (!array_key_exists((int)$storeId, $this->methodList)) {
-            $this->methodList[(int)$storeId] = $this->paymentMethodList->getList((int)$storeId);
+        return in_array($quote->getPayment()->getMethod(), $availableMethods, true);
+    }
+
+    /**
+     * @param list<string> $availableMethods
+     */
+    private function getDefaultMethod(?int $storeId, array $availableMethods): ?string
+    {
+        $configuredMethod = $this->config->getDefaultSelectedMethod($storeId);
+        if ($configuredMethod === self::FIRST_MOLLIE_METHOD) {
+            return $this->getFirstMollieMethod($availableMethods);
         }
 
-        return $this->methodList[(int)$storeId];
+        return in_array($configuredMethod, $availableMethods, true) ? $configuredMethod : null;
+    }
+
+    /**
+     * @param list<string> $availableMethods
+     */
+    private function getFirstMollieMethod(array $availableMethods): ?string
+    {
+        $mollieMethods = array_values(array_filter($availableMethods, $this->canBePreselected(...)));
+
+        return $mollieMethods[0] ?? null;
+    }
+
+    private function canBePreselected(string $methodCode): bool
+    {
+        return str_starts_with($methodCode, self::MOLLIE_METHOD_PREFIX)
+            && !in_array($methodCode, self::METHODS_EXCLUDED_FROM_PRESELECTION, true);
+    }
+
+    private function setPaymentMethod(Quote $quote, int $quoteId, string $methodCode): void
+    {
+        $payment = $quote->getPayment();
+        $previousMethodCode = $payment->getMethod();
+        $payment->setMethod($methodCode);
+
+        $this->isSettingPaymentMethod = true;
+        try {
+            $this->paymentMethodManagement->set($quoteId, $payment);
+        } catch (LocalizedException $exception) {
+            $payment->setMethod($previousMethodCode);
+            $this->logger->addErrorLog(
+                'Unable to preselect payment method ' . $methodCode,
+                $exception->getMessage()
+            );
+        } finally {
+            $this->isSettingPaymentMethod = false;
+        }
     }
 }

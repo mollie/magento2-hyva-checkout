@@ -6,6 +6,9 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Mollie\HyvaCheckout\Service\Quote\AvailablePaymentMethodsInterface"
+                type="Mollie\HyvaCheckout\Service\Quote\AvailablePaymentMethods"/>
+
     <type name="Mollie\HyvaCheckout\Block\Checkout\Payment\Creditcard">
         <arguments>
             <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
