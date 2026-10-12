@@ -17,7 +17,14 @@ use Mollie\HyvaCheckout\Magewire\Express\WaitPage;
 $paymentToken = $block->getRequest()->getParam('paymentToken');
 ?>
 
-<div x-data="mollieExpressWait()">
+<div x-data="mollieExpressWait()" class="container mx-auto py-16 text-center">
+    <div id="loading-mask" x-show="status !== 'canceled'" class="flex items-center justify-center py-4">
+        <svg class="w-10 h-10 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+            <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 0 1 8-8v4a4 4 0 0 0-4 4H4z"/>
+        </svg>
+    </div>
     <div x-show="status !== 'error'" id="mollie-order-status">
         <span x-text="currentStatus"></span>
     </div>
@@ -31,7 +38,7 @@ $paymentToken = $block->getRequest()->getParam('paymentToken');
         return {
             status: '<?= $escaper->escapeJs($magewire->status) ?>',
             currentStatus: '<?= $escaper->escapeJs($magewire->currentStatus) ?>',
-            redirectToCartUrl: '<?= $escaper->escapeJs($magewire->redirectToCartUrl) ?>',
+            redirectToCartUrl: '<?= $escaper->escapeJs($block->getData('redirect_to_cart_url')) ?>',
             token: '<?= $escaper->escapeJs(is_string($paymentToken) ? $paymentToken : '') ?>',
             waitTime: 100,
 
