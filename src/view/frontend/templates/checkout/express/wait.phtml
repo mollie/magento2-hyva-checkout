@@ -15,6 +15,7 @@ use Mollie\HyvaCheckout\Magewire\Express\WaitPage;
 /** @var Template $block */
 
 $paymentToken = $block->getRequest()->getParam('paymentToken');
+$redirectToCartUrl = $block->getData('redirect_to_cart_url');
 ?>
 
 <div x-data="mollieExpressWait()" class="container mx-auto py-16 text-center">
@@ -38,7 +39,7 @@ $paymentToken = $block->getRequest()->getParam('paymentToken');
         return {
             status: '<?= $escaper->escapeJs($magewire->status) ?>',
             currentStatus: '<?= $escaper->escapeJs($magewire->currentStatus) ?>',
-            redirectToCartUrl: '<?= $escaper->escapeJs($block->getData('redirect_to_cart_url')) ?>',
+            redirectToCartUrl: '<?= $escaper->escapeJs(is_string($redirectToCartUrl) ? $redirectToCartUrl : '') ?>',
             token: '<?= $escaper->escapeJs(is_string($paymentToken) ? $paymentToken : '') ?>',
             waitTime: 100,
 
