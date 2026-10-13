@@ -25,10 +25,20 @@ composer config repositories.hyva-themes/magento2-default-theme-csp git git@gitl
 composer config repositories.hyva-themes/magento2-compat-module-fallback git git@gitlab.hyva.io:hyva-themes/magento2-compat-module-fallback.git
 composer config repositories.hyva-themes/magento2-order-cancellation-webapi git git@gitlab.hyva.io:hyva-themes/magento2-order-cancellation-webapi.git
 composer config repositories.hyva-themes/hyva-checkout git git@gitlab.hyva.io:hyva-checkout/checkout.git
+composer config repositories.hyva-themes/magento2-hyva-checkout-v1bc git git@gitlab.hyva.io:hyva-checkout/checkout-v1bc.git
 
 jq '.replace |= (. // {} | .["hyva-themes/magento2-mollie-theme-bundle"] = "*")' composer.json > composer.tmp && mv composer.tmp composer.json
 
-composer require hyva-themes/magento2-default-theme-csp hyva-themes/magento2-hyva-checkout
+# HYVA_CHECKOUT_VERSION picks a Hyvä Checkout version, e.g. 3.0.0-beta1; without it, the latest stable release.
+# Hyvä Checkout 3 requires hyva-themes/magento2-hyva-checkout-v1bc, which runs the Magewire v1 components of this
+# module on Magewire 3.
+if [ -n "${HYVA_CHECKOUT_VERSION:-}" ]; then
+    composer config minimum-stability beta
+    composer config prefer-stable true
+    composer require --with-all-dependencies hyva-themes/magento2-default-theme-csp "hyva-themes/magento2-hyva-checkout:$HYVA_CHECKOUT_VERSION"
+else
+    composer require hyva-themes/magento2-default-theme-csp hyva-themes/magento2-hyva-checkout
+fi
 
 bin/magento setup:upgrade --keep-generated
 

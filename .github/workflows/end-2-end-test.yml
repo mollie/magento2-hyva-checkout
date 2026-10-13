@@ -51,6 +51,10 @@ jobs:
           - PHP_VERSION: php84-fpm
             MAGENTO_VERSION: 2.4.9
             NO_API_KEY_TEST: false
+          - PHP_VERSION: php84-fpm
+            MAGENTO_VERSION: 2.4.9
+            NO_API_KEY_TEST: false
+            HYVA_CHECKOUT_VERSION: 3.0.0-beta1
           - PHP_VERSION: php82-fpm
             MAGENTO_VERSION: 2.4.7-p8
             NO_API_KEY_TEST: true
@@ -61,6 +65,7 @@ jobs:
       MOLLIE_API_KEY_TEST: ${{ secrets.MOLLIE_API_KEY_TEST }}
       HYVA_SSH_PRIVATE_KEY: ${{ secrets.HYVA_SSH_PRIVATE_KEY }}
       NO_API_KEY_TEST: ${{ matrix.NO_API_KEY_TEST }}
+      HYVA_CHECKOUT_VERSION: ${{ matrix.HYVA_CHECKOUT_VERSION }}
       TESTRAIL_DOMAIN: ${{ secrets.TESTRAIL_DOMAIN }}
       TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
       TESTRAIL_PASSWORD: ${{ secrets.TESTRAIL_PASSWORD }}
@@ -171,7 +176,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: E2E logs - ${{ matrix.PHP_VERSION }} - ${{ matrix.MAGENTO_VERSION }} - ${{ matrix.NO_API_KEY_TEST }}
+          name: E2E logs - ${{ matrix.PHP_VERSION }} - ${{ matrix.MAGENTO_VERSION }} - ${{ matrix.NO_API_KEY_TEST }}${{ matrix.HYVA_CHECKOUT_VERSION && format(' - Hyvä Checkout {0}', matrix.HYVA_CHECKOUT_VERSION) || '' }}
           path: |
             tests/End-2-End/test-results
             tests/End-2-End/playwright-report

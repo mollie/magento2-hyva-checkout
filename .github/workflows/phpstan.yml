@@ -26,6 +26,9 @@ jobs:
                       MAGENTO_VERSION: 2.4.7-p8
                     - PHP_VERSION: php84-fpm
                       MAGENTO_VERSION: 2.4.9
+                    - PHP_VERSION: php84-fpm
+                      MAGENTO_VERSION: 2.4.9
+                      HYVA_CHECKOUT_VERSION: 3.0.0-beta1
 
         runs-on: ubuntu-latest
         steps:
@@ -41,7 +44,7 @@ jobs:
               run: docker cp .github/workflows/templates/magento/install-hyva.sh magento-project-community-edition:/data/install-hyva.sh
 
             - name: Install Hyvä Checkout
-              run: docker exec -e HYVA_SSH_PRIVATE_KEY="${{ secrets.HYVA_SSH_PRIVATE_KEY }}" magento-project-community-edition /bin/bash /data/install-hyva.sh
+              run: docker exec -e HYVA_SSH_PRIVATE_KEY="${{ secrets.HYVA_SSH_PRIVATE_KEY }}" -e HYVA_CHECKOUT_VERSION="${{ matrix.HYVA_CHECKOUT_VERSION }}" magento-project-community-edition /bin/bash /data/install-hyva.sh
 
             - name: Upload our code into the docker container
               run: docker cp $(pwd) magento-project-community-edition:/data/extensions/
