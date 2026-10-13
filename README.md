@@ -17,6 +17,12 @@ This repository holds the module that adds support for the Mollie payment method
 If you are using the **Hyvä React Checkout** module, we have a separate repository for that:
 https://github.com/mollie/magento2-hyva-react-checkout
 
+## Supported Hyvä Checkout versions
+
+This module works with Hyvä Checkout 1.3.6 and later, and with Hyvä Checkout 3. Its checkout components are written for
+Magewire 1; on Hyvä Checkout 3 they run through `hyva-themes/magento2-hyva-checkout-v1bc`, which Hyvä Checkout 3
+installs. Keep the `Hyva_CheckoutMwv1bc` module enabled while this module is installed.
+
 ## Installation
 
 1. Install the module using composer: 

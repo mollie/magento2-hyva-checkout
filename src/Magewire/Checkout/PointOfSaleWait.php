@@ -6,6 +6,7 @@ namespace Mollie\HyvaCheckout\Magewire\Checkout;
 
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magewirephp\Magewire\Component;
@@ -23,6 +24,7 @@ class PointOfSaleWait extends Component
     private PaymentTokenForOrder $paymentTokenForOrder;
     private EncryptorInterface $encryptor;
     private OrderRepositoryInterface $orderRepository;
+    private UrlInterface $urlBuilder;
 
     public string $token = '';
     public string $status = '';
@@ -36,7 +38,8 @@ class PointOfSaleWait extends Component
         Transaction $transaction,
         PaymentTokenForOrder $paymentTokenForOrder,
         EncryptorInterface $encryptor,
-        OrderRepositoryInterface $orderRepository
+        OrderRepositoryInterface $orderRepository,
+        UrlInterface $urlBuilder
     ) {
         $this->requestInterface = $requestInterface;
         $this->getCustomerOrder = $getCustomerOrder;
@@ -45,6 +48,7 @@ class PointOfSaleWait extends Component
         $this->paymentTokenForOrder = $paymentTokenForOrder;
         $this->encryptor = $encryptor;
         $this->orderRepository = $orderRepository;
+        $this->urlBuilder = $urlBuilder;
     }
 
     public function mount(): void
@@ -88,7 +92,7 @@ class PointOfSaleWait extends Component
         $order = $this->getOrder();
         $paymentToken = $this->paymentTokenForOrder->execute($order);
 
-        $this->redirect('mollie/checkout/redirect', ['paymentToken' => $paymentToken]);
+        $this->redirect($this->urlBuilder->getUrl('mollie/checkout/redirect', ['paymentToken' => $paymentToken]));
     }
 
     private function getOrder(): OrderInterface
