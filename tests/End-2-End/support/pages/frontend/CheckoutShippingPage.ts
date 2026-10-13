@@ -98,7 +98,7 @@ export default class CheckoutShippingPage {
   private async fillEmailAndWaitUntilSaved(page: Page, input: any, value: string) {
     await expect(async () => {
       const guestDetailsSaved = page.waitForResponse(
-        (response) => response.url().includes('guest-details') && response.status() === 200,
+        (response) => this.isGuestDetailsUpdate(response) && response.status() === 200,
         { timeout: 5000 }
       );
 
@@ -108,6 +108,22 @@ export default class CheckoutShippingPage {
 
       await guestDetailsSaved;
     }).toPass({ timeout: 45000 });
+  }
+
+  // Hyvä Checkout 1.x (Magewire 1) posts each component to a URL ending in its name. Hyvä Checkout 3 (Magewire 3)
+  // posts to one URL and names the components in the request body.
+  private isGuestDetailsUpdate(response: any): boolean {
+    if (response.url().includes('guest-details')) {
+      return true;
+    }
+
+    try {
+      const components = JSON.parse(response.request().postData() || '{}').components || [];
+
+      return components.some((component: any) => JSON.parse(component.snapshot).memo?.name === 'checkout.guest-details');
+    } catch (e) {
+      return false;
+    }
   }
 
   private typeableFields(address: any): [string, string][] {
