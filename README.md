@@ -19,9 +19,12 @@ https://github.com/mollie/magento2-hyva-react-checkout
 
 ## Supported Hyvä Checkout versions
 
-This module works with Hyvä Checkout 1.3.6 and later, and with Hyvä Checkout 3. Its checkout components are written for
-Magewire 1; on Hyvä Checkout 3 they run through `hyva-themes/magento2-hyva-checkout-v1bc`, which Hyvä Checkout 3
-installs. Keep the `Hyva_CheckoutMwv1bc` module enabled while this module is installed.
+This module works with Hyvä Checkout 1.3.6 and later, and with Hyvä Checkout 3.
+
+Its checkout components are written for Magewire 1. On Hyvä Checkout 3 they need
+`hyva-themes/magento2-hyva-checkout-v1bc`, which runs Magewire 1 components on Magewire 3. Require it in your project
+(see Installation), and keep its module `Hyva_CheckoutMwv1bc` enabled while this module is installed. The Hyvä
+Checkout 3.0 betas install it as well, but don't rely on that: a later release may no longer require it.
 
 ## Installation
 
@@ -31,10 +34,22 @@ installs. Keep the `Hyva_CheckoutMwv1bc` module enabled while this module is ins
 composer require mollie/magento2-hyva-checkout
 ```
 
+On Hyvä Checkout 3, also require the Magewire 1 compatibility module:
+
+```bash
+composer require mollie/magento2-hyva-checkout hyva-themes/magento2-hyva-checkout-v1bc
+```
+
 2. Enable the module:
 
 ```bash
 bin/magento module:enable Mollie_HyvaCheckout
+```
+
+On Hyvä Checkout 3, also enable the compatibility module:
+
+```bash
+bin/magento module:enable Hyva_CheckoutMwv1bc
 ```
 
 3. Upgrade the database:

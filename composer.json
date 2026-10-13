@@ -20,6 +20,7 @@
     }
   },
   "suggest": {
-    "mollie/magento2-hyva-compatibility": "Adds compatibility for Mollie Payments to Hyvä Themes"
+    "mollie/magento2-hyva-compatibility": "Adds compatibility for Mollie Payments to Hyvä Themes",
+    "hyva-themes/magento2-hyva-checkout-v1bc": "Required with Hyvä Checkout 3: runs this module's Magewire 1 components on Magewire 3"
   }
 }

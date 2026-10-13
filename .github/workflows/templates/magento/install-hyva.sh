@@ -30,12 +30,13 @@ composer config repositories.hyva-themes/magento2-hyva-checkout-v1bc git git@git
 jq '.replace |= (. // {} | .["hyva-themes/magento2-mollie-theme-bundle"] = "*")' composer.json > composer.tmp && mv composer.tmp composer.json
 
 # HYVA_CHECKOUT_VERSION picks a Hyvä Checkout version, e.g. 3.0.0-beta1; without it, the latest stable release.
-# Hyvä Checkout 3 requires hyva-themes/magento2-hyva-checkout-v1bc, which runs the Magewire v1 components of this
-# module on Magewire 3.
+# With Hyvä Checkout 3 this module needs hyva-themes/magento2-hyva-checkout-v1bc, which runs its Magewire v1
+# components on Magewire 3.
 if [ -n "${HYVA_CHECKOUT_VERSION:-}" ]; then
     composer config minimum-stability beta
     composer config prefer-stable true
-    composer require --with-all-dependencies hyva-themes/magento2-default-theme-csp "hyva-themes/magento2-hyva-checkout:$HYVA_CHECKOUT_VERSION"
+    composer require --with-all-dependencies hyva-themes/magento2-default-theme-csp \
+        "hyva-themes/magento2-hyva-checkout:$HYVA_CHECKOUT_VERSION" hyva-themes/magento2-hyva-checkout-v1bc
 else
     composer require hyva-themes/magento2-default-theme-csp hyva-themes/magento2-hyva-checkout
 fi
