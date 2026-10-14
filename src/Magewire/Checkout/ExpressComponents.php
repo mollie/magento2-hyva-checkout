@@ -45,6 +45,10 @@ class ExpressComponents extends Component
     public function createSession(): void
     {
         $cart = $this->checkoutSession->getQuote();
+        if (!$cart->getIsActive()) {
+            return;
+        }
+
         $this->clientAccessToken = $this->createSession->execute($cart);
 
         $this->cartRepository->save($cart);
@@ -53,6 +57,10 @@ class ExpressComponents extends Component
     public function createCheckoutSession(): void
     {
         $cart = $this->checkoutSession->getQuote();
+        if (!$cart->getIsActive()) {
+            return;
+        }
+
         $this->clientAccessToken = $this->createSession->execute($cart, false);
 
         $this->cartRepository->save($cart);

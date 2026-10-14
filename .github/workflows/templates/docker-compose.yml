@@ -7,7 +7,7 @@ services:
       - MAGENTO_VERSION
       - MOLLIE_API_KEY_TEST
       - HYVA_SSH_PRIVATE_KEY
-      - HYVA_CHECKOUT_VERSION
+      - HYVA_CHECKOUT_MAJOR
       - NO_API_KEY_TEST
     volumes:
       - ../../../magento-logs:/data/var/log

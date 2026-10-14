@@ -29,17 +29,37 @@ composer config repositories.hyva-themes/magento2-hyva-checkout-v1bc git git@git
 
 jq '.replace |= (. // {} | .["hyva-themes/magento2-mollie-theme-bundle"] = "*")' composer.json > composer.tmp && mv composer.tmp composer.json
 
-# HYVA_CHECKOUT_VERSION picks a Hyvä Checkout version, e.g. 3.0.0-beta1; without it, the latest stable release.
+# gitlab.hyva.io resets SSH connections when many CI jobs clone at the same time
+# ("kex_exchange_identification: Connection reset by peer"), so retry before giving up.
+composer_require() {
+    for attempt in 1 2; do
+        composer require "$@" && return 0
+        echo "composer require failed (attempt $attempt), retrying in $((attempt * 30)) seconds"
+        sleep $((attempt * 30))
+    done
+
+    composer require "$@"
+}
+
+# HYVA_CHECKOUT_MAJOR selects the Hyvä Checkout major to test against. Both majors are pinned explicitly, so the
+# major 1 jobs keep testing 1.x after Hyvä Checkout 3 becomes the latest stable release.
 # With Hyvä Checkout 3 this module needs hyva-themes/magento2-hyva-checkout-v1bc, which runs its Magewire v1
 # components on Magewire 3.
-if [ -n "${HYVA_CHECKOUT_VERSION:-}" ]; then
-    composer config minimum-stability beta
-    composer config prefer-stable true
-    composer require --with-all-dependencies hyva-themes/magento2-default-theme-csp \
-        "hyva-themes/magento2-hyva-checkout:$HYVA_CHECKOUT_VERSION" hyva-themes/magento2-hyva-checkout-v1bc
-else
-    composer require hyva-themes/magento2-default-theme-csp hyva-themes/magento2-hyva-checkout
-fi
+case "${HYVA_CHECKOUT_MAJOR:-}" in
+    1)
+        composer_require hyva-themes/magento2-default-theme-csp "hyva-themes/magento2-hyva-checkout:^1.3"
+        ;;
+    3)
+        composer config minimum-stability beta
+        composer config prefer-stable true
+        composer_require --with-all-dependencies hyva-themes/magento2-default-theme-csp \
+            "hyva-themes/magento2-hyva-checkout:^3.0" hyva-themes/magento2-hyva-checkout-v1bc
+        ;;
+    *)
+        echo "Variable \$HYVA_CHECKOUT_MAJOR must be 1 or 3, got '${HYVA_CHECKOUT_MAJOR:-}'"
+        exit 1
+        ;;
+esac
 
 bin/magento setup:upgrade --keep-generated
 

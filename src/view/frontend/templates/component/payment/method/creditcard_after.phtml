@@ -55,10 +55,25 @@ if ($block->isComponentsEnabled()) {
                 isMounted = true;
             }
 
+            function isRemovedFromDomError(error) {
+                return String(error?.message ?? '').includes('not present in the DOM');
+            }
+
             function unmountCardComponent() {
-                if (isMounted && cardComponent) {
+                if (!isMounted || !cardComponent) {
+                    return;
+                }
+
+                isMounted = false;
+
+                try {
                     cardComponent.unmount();
-                    isMounted = false;
+                } catch (error) {
+                    // Hyvä Checkout 3 can remove the card form before uninitializing the method. Throwing here
+                    // would leave the credit card method active, so only that case is ignored.
+                    if (!isRemovedFromDomError(error)) {
+                        throw error;
+                    }
                 }
             }
 

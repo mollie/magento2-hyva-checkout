@@ -96,6 +96,15 @@ export default class CheckoutShippingPage {
   // attached and the value changed since focus, so clear and refill on every attempt and
   // retry until the guest-details request confirms the email reached the server.
   private async fillEmailAndWaitUntilSaved(page: Page, input: any, value: string) {
+    // Hyvä Checkout 3 has no auto-save on the guest email, also not with v1bc: the email is
+    // submitted with the step, so there is no save request to wait for.
+    await input.waitFor();
+    if (await this.isMagewireThree(page)) {
+      await input.fill(value);
+      await input.blur();
+      return;
+    }
+
     await expect(async () => {
       const guestDetailsSaved = page.waitForResponse(
         (response) => this.isGuestDetailsUpdate(response) && response.status() === 200,
@@ -124,6 +133,10 @@ export default class CheckoutShippingPage {
     } catch (e) {
       return false;
     }
+  }
+
+  private async isMagewireThree(page: Page): Promise<boolean> {
+    return await page.locator('[wire\\:snapshot]').count() > 0;
   }
 
   private typeableFields(address: any): [string, string][] {
