@@ -16,7 +16,7 @@ use Magento\Framework\View\Element\Template;
 <script>
     function mollieExpressCheckout() {
         function wire() {
-            return Magewire.find('<?= $escaper->escapeJs($block->getNameInLayout()) ?>');
+            return Magewire.find('checkout.payment.method.mollie_methods_expresscomponents');
         }
 
         return {

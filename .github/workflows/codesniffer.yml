@@ -1,5 +1,14 @@
 name: Codesniffer with the Magento2 standard
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  workflow_dispatch:
 
 jobs:
   build:

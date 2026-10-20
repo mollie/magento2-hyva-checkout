@@ -5,6 +5,10 @@
 
 import { expect } from '@playwright/test';
 
+// The checkout page itself: /checkout/index/index/step/<step>/ for the default checkout, /checkout for onepage.
+// The success page (/checkout/onepage/success) and Mollie's hosted page don't match.
+const CHECKOUT_PAGE = /\/checkout\/?(index\/index\/.*)?(\?.*)?$/;
+
 export default class CheckoutPaymentPage {
   orderId = null;
 
@@ -33,7 +37,14 @@ export default class CheckoutPaymentPage {
 
   async pressPlaceOrderButton(page) {
     await page.locator('[x-bind="buttonPlaceOrder"]:not([disabled])').waitFor({ state: 'visible', timeout: 15000 });
-    await page.locator('[x-bind="buttonPlaceOrder"]').click({ force: true });
+    await this.clickPlaceOrderButton(page.locator('[x-bind="buttonPlaceOrder"]'));
+  }
+
+  // A forced click goes to the button's coordinates. Near the top of the viewport, the sticky header covers the
+  // button and swallows the click, so center the button first.
+  private async clickPlaceOrderButton(button) {
+    await button.evaluate(element => element.scrollIntoView({ block: 'center' }));
+    await button.click({ force: true });
   }
 
   async enterCouponCode(page, code = 'H20') {
@@ -52,11 +63,11 @@ export default class CheckoutPaymentPage {
     // be swallowed. Retry while the checkout is still shown and the button is clickable.
     try {
       await expect(async () => {
-        if (page.url().includes('/checkout') && await button.isEnabled().catch(() => false)) {
-          await button.click({ force: true });
+        if (CHECKOUT_PAGE.test(page.url()) && await button.isEnabled().catch(() => false)) {
+          await this.clickPlaceOrderButton(button);
         }
 
-        await expect(page).not.toHaveURL(/checkout\/index/, { timeout: 10000 });
+        await expect(page).not.toHaveURL(CHECKOUT_PAGE, { timeout: 10000 });
       }).toPass({ timeout: 90000 });
     } catch (error) {
       const message = await page.locator('[role="alert"], .message.error').first().textContent().catch(() => null);

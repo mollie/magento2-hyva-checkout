@@ -3,7 +3,8 @@
  * See COPYING.txt for license details.
  */
 
-import {defineConfig, devices} from '@playwright/test';
+import {defineConfig, devices, type Project} from '@playwright/test';
+import type {CheckoutType} from './support/fixtures';
 
 /**
  * Read environment variables from file.
@@ -14,6 +15,35 @@ import {defineConfig, devices} from '@playwright/test';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const isNoApiKeyTest = process.env.NO_API_KEY_TEST === 'true';
+
+// Each checkout type runs against its own store view (locally) or its own CI job. Only the
+// checkout types with a base URL get projects, so CI can run one type per matrix entry.
+const checkoutBaseUrls: Record<CheckoutType, string | undefined> = {
+  default: process.env.BASE_URL ?? (process.env.ONEPAGE_BASE_URL ? undefined : 'https://mollie.test/'),
+  onepage: process.env.ONEPAGE_BASE_URL,
+};
+
+const checkoutProjects: Project[] = Object.entries(checkoutBaseUrls)
+  .filter((entry): entry is [CheckoutType, string] => entry[1] !== undefined)
+  .map(([checkoutType, baseURL]) => ({
+    name: checkoutType,
+    use: {
+      ...devices['Desktop Chrome'],
+      baseURL,
+      checkoutType,
+      storageState: '.auth/backend.json',
+
+      // These settings are required to be able to work with Mollie Components
+      bypassCSP: true,
+      launchOptions: {
+        args: ['--disable-web-security'],
+      },
+    },
+
+    dependencies: ['setup'],
+  }));
+
+const defaultBaseUrl = Object.values(checkoutBaseUrls).find(url => url !== undefined);
 
 const testRailOptions = {
   // Whether to add <properties> with all annotations; default is false
@@ -49,7 +79,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.BASE_URL || 'https://mollie.test/',
+    baseURL: defaultBaseUrl,
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'retain-on-failure',
@@ -71,21 +101,7 @@ export default defineConfig({
   projects: [
     { name: 'setup', testMatch: /.*\.setup\.ts/ },
 
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: '.auth/backend.json',
-
-        // These settings are required to be able to work with Mollie Components
-        bypassCSP: true,
-        launchOptions: {
-          args: ['--disable-web-security'],
-        },
-      },
-
-      dependencies: ['setup'],
-    },
+    ...checkoutProjects,
 
     {
       name: 'no-api-key',

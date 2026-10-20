@@ -3,7 +3,7 @@
  * See COPYING.txt for license details.
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../support/fixtures';
 import ProductPage from "Pages/frontend/ProductPage";
 
 const productPage = new ProductPage();
