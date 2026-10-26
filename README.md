@@ -23,8 +23,9 @@ This module works with Hyvä Checkout 1.3.6 and later, and with Hyvä Checkout 3
 
 Its checkout components are written for Magewire 1. On Hyvä Checkout 3 they need
 `hyva-themes/magento2-hyva-checkout-v1bc`, which runs Magewire 1 components on Magewire 3. Require it in your project
-(see Installation), and keep its module `Hyva_CheckoutMwv1bc` enabled while this module is installed. The Hyvä
-Checkout 3.0 betas install it as well, but don't rely on that: a later release may no longer require it.
+(see Installation), and keep its module `Hyva_CheckoutV1bc` enabled while this module is installed (with the Hyvä
+Checkout 3.0 betas, the module is named `Hyva_CheckoutMwv1bc`). Hyvä Checkout 3.0 installs it as well, but don't rely
+on that: a later release may no longer require it.
 
 ## Installation
 
@@ -49,8 +50,10 @@ bin/magento module:enable Mollie_HyvaCheckout
 On Hyvä Checkout 3, also enable the compatibility module:
 
 ```bash
-bin/magento module:enable Hyva_CheckoutMwv1bc
+bin/magento module:enable Hyva_CheckoutV1bc
 ```
+
+With the Hyvä Checkout 3.0 betas, enable `Hyva_CheckoutMwv1bc` instead.
 
 3. Upgrade the database:
 
