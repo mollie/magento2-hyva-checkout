@@ -12,7 +12,13 @@
             <block name="checkout.payment.method.mollie_methods_expresscomponents"
                    template="Mollie_HyvaCheckout::component/payment/method/express_components.phtml"
                    ifconfig="payment/mollie_methods_expresscomponents/active"
-            />
+            >
+                <arguments>
+                    <argument name="magewire" xsi:type="object">
+                        Mollie\HyvaCheckout\Magewire\Checkout\ExpressComponents
+                    </argument>
+                </arguments>
+            </block>
         </referenceContainer>
 
         <referenceBlock name="checkout.payment.methods">

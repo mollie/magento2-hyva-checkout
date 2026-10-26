@@ -3,7 +3,8 @@
  * See COPYING.txt for license details.
  */
 
-import { test, expect, chromium } from '@playwright/test';
+import { chromium } from '@playwright/test';
+import { test, expect, isOnepageCheckout } from '../../support/fixtures';
 import CheckoutPaymentPage from "Pages/frontend/CheckoutPaymentPage";
 import VisitCheckoutPaymentCompositeAction from "CompositeActions/VisitCheckoutPaymentCompositeAction";
 import MollieHostedPaymentPage from "Pages/mollie/MollieHostedPaymentPage";
@@ -71,6 +72,7 @@ test('Validate that Mollie Components are loaded when refreshing the payment ste
 
 test('Validate that Mollie Components are unmounted correctly', async ({ page }) => {
   test.skip(!process.env.mollie_available_methods.includes('creditcard'), 'Skipping test as Credit Card is not available');
+  test.skip(isOnepageCheckout(), 'The onepage checkout has no shipping step to go back to');
 
   await visitCheckoutPayment.visit(page);
 

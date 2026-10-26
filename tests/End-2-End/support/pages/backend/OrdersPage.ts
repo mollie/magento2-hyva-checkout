@@ -40,7 +40,8 @@ export default class OrdersPage {
       const row = await page.locator('.data-row', { hasText: incrementId })
         .locator('a.action-menu-item', { hasText: 'View' });
 
-      const href = await row.getAttribute('href');
+      // The grid rows are loaded by a separate AJAX request that can be slow under load.
+      const href = await row.getAttribute('href', { timeout: 30000 });
       await page.goto(href);
 
       await page.getByText('Submit Comment').isVisible();
@@ -65,9 +66,13 @@ export default class OrdersPage {
         await responsePromise;
       }).toPass({ timeout: 60000 });
 
-      // Navigate to the same URL instead of reload to avoid ERR_ABORTED/frame detach issues
-      await page.goto(page.url(), {waitUntil: 'domcontentloaded'});
-      await page.waitForLoadState('load');
+      // A successful fetch triggers location.reload(), which can abort our own navigation
+      // with ERR_ABORTED. Retry until a navigation completes without being interrupted.
+      const url = page.url();
+      await expect(async () => {
+        await page.goto(url, {waitUntil: 'domcontentloaded'});
+        await page.waitForLoadState('load');
+      }).toPass({ timeout: 30000 });
     }
 
     async assertOrderStatusIs(page, status: string, maxWaitSeconds = 120) {

@@ -17,13 +17,7 @@
             <block name="checkout.payment.method.mollie_methods_expresscomponents.after"
                    template="Mollie_HyvaCheckout::component/payment/method/express_components_after.phtml"
                    ifconfig="payment/mollie_methods_expresscomponents/active"
-            >
-                <arguments>
-                    <argument name="magewire" xsi:type="object">
-                        Mollie\HyvaCheckout\Magewire\Checkout\ExpressComponents
-                    </argument>
-                </arguments>
-            </block>
+            />
 
             <block name="checkout.payment.methods.after.mollie_methods_applepay"
                    class="Mollie\HyvaCheckout\Block\Checkout\Payment\ApplepayAfter"

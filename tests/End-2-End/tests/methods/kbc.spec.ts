@@ -3,7 +3,7 @@
  * See COPYING.txt for license details.
  */
 
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../../support/fixtures';
 import CheckoutPaymentPage from "Pages/frontend/CheckoutPaymentPage";
 import VisitCheckoutPaymentCompositeAction from "CompositeActions/VisitCheckoutPaymentCompositeAction";
 import MollieHostedPaymentPage from "Pages/mollie/MollieHostedPaymentPage";
