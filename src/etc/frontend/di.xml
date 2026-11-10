@@ -71,4 +71,14 @@
         <plugin name="mollie_hyva_checkout_redirect_on_error"
                 type="Mollie\HyvaCheckout\Plugin\Mollie\Service\Order\RedirectOnErrorPlugin"/>
     </type>
+
+    <!-- Let the Second Chance email reorder pass the Hyvä Checkout Place Order reCAPTCHA -->
+    <type name="Mollie\Payment\Service\Order\Reorder">
+        <plugin name="mollie_hyva_checkout_mark_reorder_in_progress"
+                type="Mollie\HyvaCheckout\Plugin\Mollie\Service\Order\MarkReorderInProgressPlugin"/>
+    </type>
+    <type name="Hyva\Checkout\Model\Quote\ValidationRules\ReCaptchaValidationRule">
+        <plugin name="mollie_hyva_checkout_skip_place_order_recaptcha_for_reorder"
+                type="Mollie\HyvaCheckout\Plugin\Hyva\Checkout\Quote\SkipPlaceOrderReCaptchaForReorderPlugin"/>
+    </type>
 </config>
